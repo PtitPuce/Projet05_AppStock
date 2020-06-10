@@ -20,6 +20,8 @@ using AppStock.Infrastructure.Services.Article;
 using AppStock.Infrastructure.Repositories.Article;
 using AppStock.Infrastructure.Services.ArticleFamille;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
+using AppStock.Infrastructure.Services.NomTypeTVA;
+using AppStock.Infrastructure.Repositories.NomTypeTVA;
 
 namespace AppStock
 {
@@ -66,10 +68,12 @@ namespace AppStock
             // S E R V I C E S //
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<IArticleFamilleService, ArticleFamilleService>();
+            services.AddTransient<INomTypeTVAService, NomTypeTVAService>();
 
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
             services.AddTransient<IArticleFamilleRepository, ArticleFamilleRepository>();
+            services.AddTransient<INomTypeTVARepository, NomTypeTVARepository>();
             
         }
 

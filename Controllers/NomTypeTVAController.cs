@@ -7,34 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Infrastructure.Services.NomTypeTVA;
 
 namespace AppStock.Controllers
 {
     public class NomTypeTVAController : Controller
     {
+        private readonly INomTypeTVAService _service;
         private readonly ApplicationDbContext _context;
 
-        public NomTypeTVAController(ApplicationDbContext context)
+        public NomTypeTVAController(INomTypeTVAService service, ApplicationDbContext context)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: NomTypeTVA
         public async Task<IActionResult> Index()
         {
-            return View(await _context.NomTypeTVAEntities.ToListAsync());
+            return View(await _service.GetAll());
         }
 
         // GET: NomTypeTVA/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var nomTypeTVA = await _context.NomTypeTVAEntities
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var nomTypeTVA = await _service.GetOneById(id);
             if (nomTypeTVA == null)
             {
                 return NotFound();
@@ -58,22 +55,16 @@ namespace AppStock.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(nomTypeTVA);
-                await _context.SaveChangesAsync();
+                var item = await _service.Add(nomTypeTVA);
                 return RedirectToAction(nameof(Index));
             }
             return View(nomTypeTVA);
         }
 
         // GET: NomTypeTVA/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var nomTypeTVA = await _context.NomTypeTVAEntities.FindAsync(id);
+            var nomTypeTVA = await _service.GetOneById(id);
             if (nomTypeTVA == null)
             {
                 return NotFound();
@@ -97,8 +88,7 @@ namespace AppStock.Controllers
             {
                 try
                 {
-                    _context.Update(nomTypeTVA);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(nomTypeTVA);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +107,9 @@ namespace AppStock.Controllers
         }
 
         // GET: NomTypeTVA/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var nomTypeTVA = await _context.NomTypeTVAEntities
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var nomTypeTVA = await _service.GetOneById(id);
             if (nomTypeTVA == null)
             {
                 return NotFound();
@@ -139,15 +123,13 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var nomTypeTVA = await _context.NomTypeTVAEntities.FindAsync(id);
-            _context.NomTypeTVAEntities.Remove(nomTypeTVA);
-            await _context.SaveChangesAsync();
+            await _service.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool NomTypeTVAExists(int id)
         {
-            return _context.NomTypeTVAEntities.Any(e => e.Id == id);
+            return _service.Exist(id);
         }
     }
 }
