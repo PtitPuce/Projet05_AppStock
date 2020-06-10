@@ -22,7 +22,7 @@ namespace AppStock.Controllers
         // GET: Stock
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Stocks.Include(s => s.Article);
+            var applicationDbContext = _context.StockEntities.Include(s => s.Article);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var stock = await _context.Stocks
+            var stock = await _context.StockEntities
                 .Include(s => s.Article)
                 .FirstOrDefaultAsync(m => m.ArticleID == id);
             if (stock == null)
@@ -48,7 +48,7 @@ namespace AppStock.Controllers
         // GET: Stock/Create
         public IActionResult Create()
         {
-            ViewData["ArticleID"] = new SelectList(_context.Articles, "Id", "Code");
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ArticleID,Quantite")] Stock stock)
+        public async Task<IActionResult> Create([Bind("ArticleID,Quantite")] StockEntity stock)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace AppStock.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleID"] = new SelectList(_context.Articles, "Id", "Code", stock.ArticleID);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", stock.ArticleID);
             return View(stock);
         }
 
@@ -77,12 +77,12 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _context.StockEntities.FindAsync(id);
             if (stock == null)
             {
                 return NotFound();
             }
-            ViewData["ArticleID"] = new SelectList(_context.Articles, "Id", "Code", stock.ArticleID);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", stock.ArticleID);
             return View(stock);
         }
 
@@ -91,7 +91,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ArticleID,Quantite")] Stock stock)
+        public async Task<IActionResult> Edit(int id, [Bind("ArticleID,Quantite")] StockEntity stock)
         {
             if (id != stock.ArticleID)
             {
@@ -118,7 +118,7 @@ namespace AppStock.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleID"] = new SelectList(_context.Articles, "Id", "Code", stock.ArticleID);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", stock.ArticleID);
             return View(stock);
         }
 
@@ -130,7 +130,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var stock = await _context.Stocks
+            var stock = await _context.StockEntities
                 .Include(s => s.Article)
                 .FirstOrDefaultAsync(m => m.ArticleID == id);
             if (stock == null)
@@ -146,15 +146,15 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
-            _context.Stocks.Remove(stock);
+            var stock = await _context.StockEntities.FindAsync(id);
+            _context.StockEntities.Remove(stock);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StockExists(int id)
         {
-            return _context.Stocks.Any(e => e.ArticleID == id);
+            return _context.StockEntities.Any(e => e.ArticleID == id);
         }
     }
 }

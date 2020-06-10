@@ -22,7 +22,7 @@ namespace AppStock.Controllers
         // GET: ArticleFamille
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ArticleFamilles.ToListAsync());
+            return View(await _context.ArticleFamilleEntities.ToListAsync());
         }
 
         // GET: ArticleFamille/Details/5
@@ -33,7 +33,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var articleFamille = await _context.ArticleFamilles
+            var articleFamille = await _context.ArticleFamilleEntities
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (articleFamille == null)
             {
@@ -54,7 +54,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Libelle")] ArticleFamille articleFamille)
+        public async Task<IActionResult> Create([Bind("Id,Code,Libelle")] ArticleFamilleEntity articleFamille)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var articleFamille = await _context.ArticleFamilles.FindAsync(id);
+            var articleFamille = await _context.ArticleFamilleEntities.FindAsync(id);
             if (articleFamille == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle")] ArticleFamille articleFamille)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle")] ArticleFamilleEntity articleFamille)
         {
             if (id != articleFamille.Id)
             {
@@ -124,7 +124,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var articleFamille = await _context.ArticleFamilles
+            var articleFamille = await _context.ArticleFamilleEntities
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (articleFamille == null)
             {
@@ -139,15 +139,15 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var articleFamille = await _context.ArticleFamilles.FindAsync(id);
-            _context.ArticleFamilles.Remove(articleFamille);
+            var articleFamille = await _context.ArticleFamilleEntities.FindAsync(id);
+            _context.ArticleFamilleEntities.Remove(articleFamille);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ArticleFamilleExists(int id)
         {
-            return _context.ArticleFamilles.Any(e => e.Id == id);
+            return _context.ArticleFamilleEntities.Any(e => e.Id == id);
         }
     }
 }

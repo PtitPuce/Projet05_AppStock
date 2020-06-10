@@ -15,10 +15,10 @@ namespace AppStock.Data
         {
         }
 
-        public DbSet<Article> Articles { get; set; }     
-        public DbSet<ArticleFamille> ArticleFamilles { get; set; }   
-        public DbSet<Stock> Stocks { get; set; }   
-        public DbSet<NomTypeTVA> NomTypeTVA { get; set; }   
+        public DbSet<ArticleEntity> ArticleEntities { get; set; }     
+        public DbSet<ArticleFamilleEntity> ArticleFamilleEntities { get; set; }   
+        public DbSet<StockEntity> StockEntities { get; set; }   
+        public DbSet<NomTypeTVAEntity> NomTypeTVAEntities { get; set; }   
 
         protected override void OnModelCreating(ModelBuilder builder){
             base.OnModelCreating(builder);

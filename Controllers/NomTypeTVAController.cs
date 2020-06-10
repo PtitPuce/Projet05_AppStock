@@ -22,7 +22,7 @@ namespace AppStock.Controllers
         // GET: NomTypeTVA
         public async Task<IActionResult> Index()
         {
-            return View(await _context.NomTypeTVA.ToListAsync());
+            return View(await _context.NomTypeTVAEntities.ToListAsync());
         }
 
         // GET: NomTypeTVA/Details/5
@@ -33,7 +33,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var nomTypeTVA = await _context.NomTypeTVA
+            var nomTypeTVA = await _context.NomTypeTVAEntities
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (nomTypeTVA == null)
             {
@@ -54,7 +54,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Libelle,Taux")] NomTypeTVA nomTypeTVA)
+        public async Task<IActionResult> Create([Bind("Id,Code,Libelle,Taux")] NomTypeTVAEntity nomTypeTVA)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var nomTypeTVA = await _context.NomTypeTVA.FindAsync(id);
+            var nomTypeTVA = await _context.NomTypeTVAEntities.FindAsync(id);
             if (nomTypeTVA == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle,Taux")] NomTypeTVA nomTypeTVA)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle,Taux")] NomTypeTVAEntity nomTypeTVA)
         {
             if (id != nomTypeTVA.Id)
             {
@@ -124,7 +124,7 @@ namespace AppStock.Controllers
                 return NotFound();
             }
 
-            var nomTypeTVA = await _context.NomTypeTVA
+            var nomTypeTVA = await _context.NomTypeTVAEntities
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (nomTypeTVA == null)
             {
@@ -139,15 +139,15 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var nomTypeTVA = await _context.NomTypeTVA.FindAsync(id);
-            _context.NomTypeTVA.Remove(nomTypeTVA);
+            var nomTypeTVA = await _context.NomTypeTVAEntities.FindAsync(id);
+            _context.NomTypeTVAEntities.Remove(nomTypeTVA);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool NomTypeTVAExists(int id)
         {
-            return _context.NomTypeTVA.Any(e => e.Id == id);
+            return _context.NomTypeTVAEntities.Any(e => e.Id == id);
         }
     }
 }

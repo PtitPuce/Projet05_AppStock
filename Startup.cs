@@ -16,6 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
+using AppStock.Infrastructure.Services.Article;
+using AppStock.Infrastructure.Repositories.Article;
+
 namespace AppStock
 {
     public class Startup
@@ -56,6 +59,13 @@ namespace AppStock
                                                         config.Filters.Add(new AuthorizeFilter(policy));
                                                     });
             services.AddRazorPages();
+
+            // S E R V I C E S //
+            services.AddTransient<IArticleService, ArticleService>();
+
+            // R E P O S I T O R I E S //
+            services.AddTransient<IArticleRepository, ArticleRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

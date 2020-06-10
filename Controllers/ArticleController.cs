@@ -7,37 +7,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Infrastructure.Services.Article;
+using System.Runtime.Serialization;
 
 namespace AppStock.Controllers
 {
     public class ArticleController : Controller
     {
+        private readonly IArticleService _service;
+
         private readonly ApplicationDbContext _context;
 
-        public ArticleController(ApplicationDbContext context)
+        public ArticleController(IArticleService service, ApplicationDbContext context)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: Article
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Articles.Include(a => a.ArticleFamille).Include(a => a.NomTypeTVA);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _service.GetAll());
         }
 
         // GET: Article/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var article = await _context.Articles
-                .Include(a => a.ArticleFamille)
-                .Include(a => a.NomTypeTVA)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _service.GetOneById(id);
             if (article == null)
             {
                 return NotFound();
@@ -49,8 +45,11 @@ namespace AppStock.Controllers
         // GET: Article/Create
         public IActionResult Create()
         {
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilles, "Id", "Code");
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVA, "Id", "Code");
+            /**
+                A FAIRE :: preparer et utiliser les services manquants
+            **/
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code");
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code");
             return View();
         }
 
@@ -59,34 +58,36 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Libelle,PrixUnitaire,ArticleFamilleID,NomTypeTVAID")] Article article)
+        public async Task<IActionResult> Create([Bind("Id,Code,Libelle,PrixUnitaire,ArticleFamilleID,NomTypeTVAID")] ArticleEntity article)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(article);
-                await _context.SaveChangesAsync();
+                var item = await _service.Add(article);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilles, "Id", "Code", article.ArticleFamilleID);
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVA, "Id", "Code", article.NomTypeTVAID);
+
+            /**
+                A FAIRE :: preparer et utiliser les services manquants
+            **/
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleID);
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAID);
             return View(article);
         }
 
         // GET: Article/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var article = await _context.Articles.FindAsync(id);
+            var article = await _service.GetOneById(id);
             if (article == null)
             {
                 return NotFound();
             }
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilles, "Id", "Code", article.ArticleFamilleID);
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVA, "Id", "Code", article.NomTypeTVAID);
+
+            /**
+                A FAIRE :: preparer et utiliser les services manquants
+            **/
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleID);
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAID);
             return View(article);
         }
 
@@ -95,7 +96,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle,PrixUnitaire,ArticleFamilleID,NomTypeTVAID")] Article article)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle,PrixUnitaire,ArticleFamilleID,NomTypeTVAID")] ArticleEntity article)
         {
             if (id != article.Id)
             {
@@ -106,8 +107,7 @@ namespace AppStock.Controllers
             {
                 try
                 {
-                    _context.Update(article);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(article);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,23 +122,19 @@ namespace AppStock.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilles, "Id", "Code", article.ArticleFamilleID);
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVA, "Id", "Code", article.NomTypeTVAID);
+            
+            /**
+                A FAIRE :: preparer et utiliser les services manquants
+            **/
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleID);
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAID);
             return View(article);
         }
 
         // GET: Article/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var article = await _context.Articles
-                .Include(a => a.ArticleFamille)
-                .Include(a => a.NomTypeTVA)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _service.GetOneById(id);
             if (article == null)
             {
                 return NotFound();
@@ -152,15 +148,13 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var article = await _context.Articles.FindAsync(id);
-            _context.Articles.Remove(article);
-            await _context.SaveChangesAsync();
+            await _service.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ArticleExists(int id)
         {
-            return _context.Articles.Any(e => e.Id == id);
+            return _service.Exist(id);
         }
     }
 }

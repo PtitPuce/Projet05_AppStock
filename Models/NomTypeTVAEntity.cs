@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AppStock.Models
 {
     [Table("app_nom_type_tva")]
-    public class NomTypeTVA
+    public class NomTypeTVAEntity
     {
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
         [Column("tva_uid")]
@@ -18,5 +18,9 @@ namespace AppStock.Models
         public string Libelle { get; set; }
         [Column("tva_taux")]
         public decimal Taux { get; set; }
+
+        // soft delete
+        [Column("is_deleted")]
+        public bool IsDeleted { get;set; } = false;
     }
 }

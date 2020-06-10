@@ -5,7 +5,7 @@ namespace AppStock.Models
 {
 
     [Table("app_article")]
-    public class Article
+    public class ArticleEntity
     {
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
         [Column("article_uid")]
@@ -24,8 +24,12 @@ namespace AppStock.Models
         [Required(ErrorMessage="Dis donc !!!")]
         public int NomTypeTVAID { get; set; }
         
-        public ArticleFamille ArticleFamille { get; set; }
-        public NomTypeTVA NomTypeTVA { get; set; }
-        public Stock Stock { get; set; }
+        // soft delete
+        [Column("is_deleted")]
+        public bool IsDeleted { get;set; } = false;
+
+        public ArticleFamilleEntity ArticleFamille { get; set; }
+        public NomTypeTVAEntity NomTypeTVA { get; set; }
+        public StockEntity Stock { get; set; }
     }
 }

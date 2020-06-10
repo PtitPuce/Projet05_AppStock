@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AppStock.Models
 {
     [Table("app_article_famille")]
-    public class ArticleFamille
+    public class ArticleFamilleEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("article_famille_uid")]
@@ -15,8 +15,12 @@ namespace AppStock.Models
         public string Code { get; set; }
         [Column("article_famille_libelle")]
         [Required]
-        public string Libelle { get; set; }    
+        public string Libelle { get; set; }  
+
+        // soft delete
+        [Column("is_deleted")]
+        public bool IsDeleted { get;set; } = false;  
         
-        public ICollection<Article> Articles { get; set; }    
+        public ICollection<ArticleEntity> Articles { get; set; }    
     }
 }
