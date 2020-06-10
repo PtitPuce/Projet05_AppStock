@@ -22,6 +22,8 @@ namespace AppStock.Data
 
         protected override void OnModelCreating(ModelBuilder builder){
             base.OnModelCreating(builder);
+
+            builder.QueryFilters();
         }
     }
 }

@@ -21,7 +21,6 @@ namespace AppStock.Infrastructure.Repositories.Article
         public async Task<IEnumerable<ArticleEntity>> GetAllAsync()
         {
             return await _context.ArticleEntities
-                                    .Where(a => a.IsDeleted == false)
                                     .Include(a => a.ArticleFamille)
                                     .Include(a => a.NomTypeTVA)
                                     .ToListAsync()
@@ -31,7 +30,6 @@ namespace AppStock.Infrastructure.Repositories.Article
         public async Task<ArticleEntity> GetOneByIdAsync(int id)
         {
             return await _context.ArticleEntities
-                                    .Where(a => a.IsDeleted == false)
                                     .Include(a => a.ArticleFamille)
                                     .Include(a => a.NomTypeTVA)
                                     .FirstOrDefaultAsync(m => m.Id == id)
