@@ -1,12 +1,42 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace AppStock.Data.Migrations
+namespace AppStock.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "app_article_famille",
+                columns: table => new
+                {
+                    article_famille_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    article_famille_code = table.Column<string>(nullable: false),
+                    article_famille_libelle = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_article_famille", x => x.article_famille_uid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "app_nom_type_tva",
+                columns: table => new
+                {
+                    tva_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    tva_code = table.Column<string>(nullable: false),
+                    tva_libelle = table.Column<string>(nullable: false),
+                    tva_taux = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_nom_type_tva", x => x.tva_uid);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -47,11 +77,40 @@ namespace AppStock.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "app_article",
+                columns: table => new
+                {
+                    article_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    article_code = table.Column<string>(nullable: false),
+                    article_libelle = table.Column<string>(nullable: false),
+                    article_pu = table.Column<decimal>(nullable: false),
+                    article_famille_uid = table.Column<int>(nullable: true),
+                    article_tva_uid = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_article", x => x.article_uid);
+                    table.ForeignKey(
+                        name: "FK_app_article_app_article_famille_article_famille_uid",
+                        column: x => x.article_famille_uid,
+                        principalTable: "app_article_famille",
+                        principalColumn: "article_famille_uid",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_app_article_app_nom_type_tva_article_tva_uid",
+                        column: x => x.article_tva_uid,
+                        principalTable: "app_nom_type_tva",
+                        principalColumn: "tva_uid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -72,7 +131,7 @@ namespace AppStock.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -152,6 +211,34 @@ namespace AppStock.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "app_stock",
+                columns: table => new
+                {
+                    article_uid = table.Column<int>(nullable: false),
+                    stock_quantite = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_stock", x => x.article_uid);
+                    table.ForeignKey(
+                        name: "FK_app_stock_app_article_article_uid",
+                        column: x => x.article_uid,
+                        principalTable: "app_article",
+                        principalColumn: "article_uid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_article_article_famille_uid",
+                table: "app_article",
+                column: "article_famille_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_article_article_tva_uid",
+                table: "app_article",
+                column: "article_tva_uid");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -193,6 +280,9 @@ namespace AppStock.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "app_stock");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -208,10 +298,19 @@ namespace AppStock.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "app_article");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "app_article_famille");
+
+            migrationBuilder.DropTable(
+                name: "app_nom_type_tva");
         }
     }
 }

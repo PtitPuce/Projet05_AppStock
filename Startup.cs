@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+
 namespace AppStock
 {
     public class Startup
@@ -27,13 +30,32 @@ namespace AppStock
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<ApplicationDbContext>(
+                o => o.UseMySql(
+                    Configuration.GetConnectionString("DefaultConnection"),
+                    mysqlo => {
+                        mysqlo.EnableRetryOnFailure(
+                            maxRetryCount: 15,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null
+                        );
+                    }
+                )
+            );
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
-           services.AddRazorPages();
+
+            services.AddControllersWithViews(config =>
+                                                    {
+                                                        // using Microsoft.AspNetCore.Mvc.Authorization;
+                                                        // using Microsoft.AspNetCore.Authorization;
+                                                        var policy = new AuthorizationPolicyBuilder()
+                                                                        .RequireAuthenticatedUser()
+                                                                        .Build();
+                                                        config.Filters.Add(new AuthorizeFilter(policy));
+                                                    });
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +72,9 @@ namespace AppStock
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            app.UseRequestLocalization("en-US");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

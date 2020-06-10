@@ -1,0 +1,48 @@
+@model AppStock.Models.Article
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Article</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Libelle)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Libelle)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PrixUnitaire)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PrixUnitaire)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ArticleFamille)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ArticleFamille.Code)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NomTypeTVA)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NomTypeTVA.Code)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

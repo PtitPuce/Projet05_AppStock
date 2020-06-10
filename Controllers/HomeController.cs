@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AppStock.Models;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace AppStock.Controllers
 {
     public class HomeController : Controller
