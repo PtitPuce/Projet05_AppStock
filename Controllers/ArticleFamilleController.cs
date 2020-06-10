@@ -7,34 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Infrastructure.Services.ArticleFamille;
 
 namespace AppStock.Controllers
 {
     public class ArticleFamilleController : Controller
     {
+        private readonly IArticleFamilleService _service;
         private readonly ApplicationDbContext _context;
 
-        public ArticleFamilleController(ApplicationDbContext context)
+        public ArticleFamilleController(IArticleFamilleService service, ApplicationDbContext context)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: ArticleFamille
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ArticleFamilleEntities.ToListAsync());
+            return View(await _service.GetAll());
         }
 
         // GET: ArticleFamille/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var articleFamille = await _context.ArticleFamilleEntities
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var articleFamille = await _service.GetOneById(id);
             if (articleFamille == null)
             {
                 return NotFound();
@@ -58,22 +55,16 @@ namespace AppStock.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(articleFamille);
-                await _context.SaveChangesAsync();
+                var item = await _service.Add(articleFamille);
                 return RedirectToAction(nameof(Index));
             }
             return View(articleFamille);
         }
 
         // GET: ArticleFamille/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var articleFamille = await _context.ArticleFamilleEntities.FindAsync(id);
+            var articleFamille = await _service.GetOneById(id);
             if (articleFamille == null)
             {
                 return NotFound();
@@ -97,8 +88,7 @@ namespace AppStock.Controllers
             {
                 try
                 {
-                    _context.Update(articleFamille);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(articleFamille);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +107,9 @@ namespace AppStock.Controllers
         }
 
         // GET: ArticleFamille/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var articleFamille = await _context.ArticleFamilleEntities
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var articleFamille = await _service.GetOneById(id);
             if (articleFamille == null)
             {
                 return NotFound();
@@ -139,15 +123,13 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var articleFamille = await _context.ArticleFamilleEntities.FindAsync(id);
-            _context.ArticleFamilleEntities.Remove(articleFamille);
-            await _context.SaveChangesAsync();
+            await _service.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ArticleFamilleExists(int id)
         {
-            return _context.ArticleFamilleEntities.Any(e => e.Id == id);
+            return _service.Exist(id);
         }
     }
 }
