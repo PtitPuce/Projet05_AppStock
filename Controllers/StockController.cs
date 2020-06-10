@@ -7,36 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Infrastructure.Services.Stock;
 
 namespace AppStock.Controllers
 {
     public class StockController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStockService _service;
 
-        public StockController(ApplicationDbContext context)
+        public StockController(ApplicationDbContext context, IStockService service)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: Stock
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.StockEntities.Include(s => s.Article);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _service.GetAll());
         }
 
         // GET: Stock/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var stock = await _context.StockEntities
-                .Include(s => s.Article)
-                .FirstOrDefaultAsync(m => m.ArticleID == id);
+            var stock = await _service.GetOneById(id);
             if (stock == null)
             {
                 return NotFound();
@@ -57,27 +53,22 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ArticleID,Quantite")] StockEntity stock)
+        public async Task<IActionResult> Create([Bind("ArticleID,Quantite")] StockEntity item)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(stock);
-                await _context.SaveChangesAsync();
+                await _service.Add(item);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", stock.ArticleID);
-            return View(stock);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", item.ArticleID);
+            return View(item);
         }
 
         // GET: Stock/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var stock = await _context.StockEntities.FindAsync(id);
+            var stock = await _service.GetOneById(id);
             if (stock == null)
             {
                 return NotFound();
@@ -91,9 +82,9 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ArticleID,Quantite")] StockEntity stock)
+        public async Task<IActionResult> Edit(int id, [Bind("ArticleID,Quantite")] StockEntity item)
         {
-            if (id != stock.ArticleID)
+            if (id != item.ArticleID)
             {
                 return NotFound();
             }
@@ -102,12 +93,11 @@ namespace AppStock.Controllers
             {
                 try
                 {
-                    _context.Update(stock);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(item);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StockExists(stock.ArticleID))
+                    if (!Exists(item.ArticleID))
                     {
                         return NotFound();
                     }
@@ -118,21 +108,14 @@ namespace AppStock.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", stock.ArticleID);
-            return View(stock);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", item.ArticleID);
+            return View(item);
         }
 
         // GET: Stock/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var stock = await _context.StockEntities
-                .Include(s => s.Article)
-                .FirstOrDefaultAsync(m => m.ArticleID == id);
+            var stock = await _service.GetOneById(id);
             if (stock == null)
             {
                 return NotFound();
@@ -146,15 +129,13 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var stock = await _context.StockEntities.FindAsync(id);
-            _context.StockEntities.Remove(stock);
-            await _context.SaveChangesAsync();
+            await _service.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StockExists(int id)
+        private bool Exists(int id)
         {
-            return _context.StockEntities.Any(e => e.ArticleID == id);
+            return _service.Exist(id);
         }
     }
 }

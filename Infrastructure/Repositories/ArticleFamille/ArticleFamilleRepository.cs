@@ -42,7 +42,7 @@ namespace AppStock.Infrastructure.Repositories.ArticleFamille
             return item;
         }
         
-        public async Task<ArticleFamilleEntity> DeleteByIdAsync(ArticleFamilleEntity item)
+        public async Task<ArticleFamilleEntity> DeleteAsync(ArticleFamilleEntity item)
         {
             item.IsDeleted = true;
             _context.Update(item);

@@ -5,19 +5,20 @@ using System.Runtime.Serialization;
 using AppStock.Models;
 using AppStock.Utils;
 using AppStock.Infrastructure.Exceptions;
-using AppStock.Infrastructure.Repositories.ArticleFamille;
+using AppStock.Infrastructure.Repositories.Stock;
 
-namespace AppStock.Infrastructure.Services.ArticleFamille
+
+namespace AppStock.Infrastructure.Services.Stock
 {
-    public class ArticleFamilleService : IArticleFamilleService
+    public class StockService : IStockService
     {
-        private readonly IArticleFamilleRepository _repository;
-        public ArticleFamilleService(IArticleFamilleRepository repository)
+        private readonly IStockRepository _repository;
+        public StockService(IStockRepository repository)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(IArticleFamilleRepository));
+            _repository = repository ?? throw new ArgumentNullException(nameof(IStockRepository));
         }
 
-        public async Task<ArticleFamilleEntity> Add(ArticleFamilleEntity item)
+        public async Task<StockEntity> Add(StockEntity item)
         {
             return await _repository.AddAsync(item);
         }
@@ -33,19 +34,19 @@ namespace AppStock.Infrastructure.Services.ArticleFamille
             await _repository.DeleteAsync(item);
         }
 
-        public async Task<IEnumerable<ArticleFamilleEntity>> GetAll()
+        public async Task<IEnumerable<StockEntity>> GetAll()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<ArticleFamilleEntity> GetOneById(int id)
+        public async Task<StockEntity> GetOneById(int id)
         {
             return await _repository.GetOneByIdAsync(id);
         }
 
-        public async Task<ArticleFamilleEntity> Update(ArticleFamilleEntity item)
+        public async Task<StockEntity> Update(StockEntity item)
         {
-            if(!_repository.Exist(item.Id)){
+            if(!_repository.Exist(item.ArticleID)){
                 throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
             }
             return await _repository.UpdateAsync(item);
@@ -53,6 +54,23 @@ namespace AppStock.Infrastructure.Services.ArticleFamille
 
         public bool Exist(int id){
             return _repository.Exist(id);
+        }
+
+        public bool IsStable(StockEntity item)
+        {
+            bool val = false;
+
+            if(item.Article is null 
+            ){
+            }
+            else if(  
+                !item.Article.IsDeleted
+              )
+            {
+                val = true;
+            }
+            
+            return val;
         }
     }
 }
