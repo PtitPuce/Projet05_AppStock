@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppStock.Models;
@@ -13,7 +15,9 @@ namespace AppStock.Infrastructure.Repositories.Article
         Task<ArticleEntity> AddAsync(ArticleEntity item);
         Task<ArticleEntity> UpdateAsync(ArticleEntity item);
         Task<ArticleEntity> DeleteAsync(ArticleEntity item);
+        
         bool Exist(int id);
+        IQueryable<ArticleEntity> QueryForStock();
 
         #pragma warning restore 1591
     }

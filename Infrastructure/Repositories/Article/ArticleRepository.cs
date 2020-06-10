@@ -26,6 +26,13 @@ namespace AppStock.Infrastructure.Repositories.Article
                                     .ToListAsync()
                                     ;
         }
+
+        public IQueryable<ArticleEntity> QueryForStock(){
+            var query =  _context.ArticleEntities
+                                .Where(o=> o.Stock == null)
+                                .OrderBy(z=> z.Libelle);
+            return query;
+        }
         
         public async Task<ArticleEntity> GetOneByIdAsync(int id)
         {

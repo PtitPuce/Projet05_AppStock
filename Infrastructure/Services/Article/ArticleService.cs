@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System;
 using System.Runtime.Serialization;
@@ -32,6 +33,11 @@ namespace AppStock.Infrastructure.Services.Article
             }
             
             await _repository.DeleteAsync(item);
+        }
+
+        public IQueryable<ArticleEntity> QueryForStock()
+        {
+            return _repository.QueryForStock();
         }
 
         public async Task<IEnumerable<ArticleEntity>> GetAll()

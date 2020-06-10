@@ -1,5 +1,4 @@
 @model IEnumerable<AppStock.Models.StockEntity>
-
 @{
     ViewData["Title"] = "Index";
 }
@@ -18,6 +17,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Article)
             </th>
+            <th>Deleted ?</th>
             <th></th>
         </tr>
     </thead>
@@ -30,6 +30,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Article.Code)
             </td>
+            <td>@item.IsDeleted</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ArticleID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ArticleID">Details</a> |

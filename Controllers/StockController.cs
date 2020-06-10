@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Infrastructure.Services.Article;
 using AppStock.Infrastructure.Services.Stock;
 
 namespace AppStock.Controllers
@@ -15,11 +16,13 @@ namespace AppStock.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IStockService _service;
+        private readonly IArticleService _serviceArticle;
 
-        public StockController(ApplicationDbContext context, IStockService service)
+        public StockController(ApplicationDbContext context, IStockService service, IArticleService service_article)
         {
             _context = context;
             _service = service;
+            _serviceArticle = service_article;
         }
 
         // GET: Stock
@@ -44,7 +47,7 @@ namespace AppStock.Controllers
         // GET: Stock/Create
         public IActionResult Create()
         {
-            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code");
+            ViewData["ArticleID"] = new SelectList(_serviceArticle.QueryForStock().AsNoTracking(), "Id", "Libelle");
             return View();
         }
 
@@ -60,7 +63,7 @@ namespace AppStock.Controllers
                 await _service.Add(item);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", item.ArticleID);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Libelle", item.ArticleID);
             return View(item);
         }
 
@@ -73,7 +76,7 @@ namespace AppStock.Controllers
             {
                 return NotFound();
             }
-            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", stock.ArticleID);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Libelle", stock.ArticleID);
             return View(stock);
         }
 
@@ -108,7 +111,7 @@ namespace AppStock.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Code", item.ArticleID);
+            ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Libelle", item.ArticleID);
             return View(item);
         }
 

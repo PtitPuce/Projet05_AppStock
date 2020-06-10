@@ -53,7 +53,7 @@ namespace AppStock.Infrastructure.Repositories.ArticleFamille
 
         public bool Exist(int id)
         {
-            return _context.ArticleEntities.Any(i => i.Id == id);
+            return _context.ArticleFamilleEntities.Any(i => i.Id == id);
         }
     }
 }
