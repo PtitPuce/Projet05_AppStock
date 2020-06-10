@@ -13,6 +13,7 @@ namespace AppStock.Infrastructure.Services.Article
         Task<ArticleEntity> Update(ArticleEntity item);
         Task DeleteById(int id);
         bool Exist(int id);
+        bool IsStable(ArticleEntity item);
         
 
         #pragma warning restore 1591

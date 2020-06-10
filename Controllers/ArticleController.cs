@@ -27,6 +27,13 @@ namespace AppStock.Controllers
         // GET: Article
         public async Task<IActionResult> Index()
         {
+            /*
+                A FAIRE
+                Pour filtrer les entites disponibles a l'affichage, il faudra determiner la nature de l'utilisateur
+                    CLIENT  ->  tel quel (càd. avec les QueryFilters d'activés)
+                    ADMIN   -> .IgnoreQueryFilters()
+            */
+            ViewData["Service"] = _service;
             return View(await _service.GetAll());
         }
 

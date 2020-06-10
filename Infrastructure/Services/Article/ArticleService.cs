@@ -55,5 +55,24 @@ namespace AppStock.Infrastructure.Services.Article
         public bool Exist(int id){
             return _repository.Exist(id);
         }
+
+        public bool IsStable(ArticleEntity item)
+        {
+            bool val = false;
+
+            if(item.NomTypeTVA is null 
+                || item.ArticleFamille is null
+            ){
+            }
+            else if(  
+                !item.NomTypeTVA.IsDeleted
+                && !item.ArticleFamille.IsDeleted
+              )
+            {
+                val = true;
+            }
+            
+            return val;
+        }
     }
 }

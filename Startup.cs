@@ -58,10 +58,12 @@ namespace AppStock
                                                                         .Build();
                                                         config.Filters.Add(new AuthorizeFilter(policy));
                                                     });
-            services.AddRazorPages();
+            //services.AddRazorPages();
+            services.AddMvc();
 
             // S E R V I C E S //
             services.AddTransient<IArticleService, ArticleService>();
+            //services.AddScoped<ArticleService>();
 
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
