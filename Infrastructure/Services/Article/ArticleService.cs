@@ -31,7 +31,7 @@ namespace AppStock.Infrastructure.Services.Article
                 throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
             }
             
-            await _repository.DeleteByIdAsync(item);
+            await _repository.DeleteAsync(item);
         }
 
         public async Task<IEnumerable<ArticleEntity>> GetAll()

@@ -12,7 +12,7 @@ namespace AppStock.Infrastructure.Repositories.Article
         Task<ArticleEntity> GetOneByIdAsync(int id);
         Task<ArticleEntity> AddAsync(ArticleEntity item);
         Task<ArticleEntity> UpdateAsync(ArticleEntity item);
-        Task<ArticleEntity> DeleteByIdAsync(ArticleEntity item);
+        Task<ArticleEntity> DeleteAsync(ArticleEntity item);
         bool Exist(int id);
 
         #pragma warning restore 1591
