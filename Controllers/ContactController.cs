@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
 using AppStock.Models.DTO;
+using AppStock.Infrastructure.Services.Contact;
 
 using AutoMapper;
 
@@ -17,13 +18,15 @@ namespace AppStock.Controllers
     public class ContactController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IContactService _service_contact;
         private readonly IMapper _mapper;
 
 
-        public ContactController(ApplicationDbContext context, IMapper mapper)
+        public ContactController(ApplicationDbContext context, IMapper mapper, IContactService service_contact)
         {
             _context = context;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _service_contact = service_contact ?? throw new ArgumentNullException(nameof(service_contact));
         }
 
         // GET: Contact
