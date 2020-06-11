@@ -21,12 +21,14 @@ using AppStock.Infrastructure.Services.ArticleFamille;
 using AppStock.Infrastructure.Services.NomTypeTVA;
 using AppStock.Infrastructure.Services.Stock;
 using AppStock.Infrastructure.Services.Adresse;
+using AppStock.Infrastructure.Services.Contact;
 
 using AppStock.Infrastructure.Repositories.Article;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
 using AppStock.Infrastructure.Repositories.NomTypeTVA;
 using AppStock.Infrastructure.Repositories.Stock;
 using AppStock.Infrastructure.Repositories.Adresse;
+using AppStock.Infrastructure.Repositories.Contact;
 
 using AutoMapper;
 
@@ -81,6 +83,7 @@ namespace AppStock
             services.AddTransient<INomTypeTVAService, NomTypeTVAService>();
             services.AddTransient<IStockService, StockService>();
             services.AddTransient<IAdresseService, AdresseService>();
+            services.AddTransient<IContactService, ContactService>();
             
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
@@ -88,6 +91,8 @@ namespace AppStock
             services.AddTransient<INomTypeTVARepository, NomTypeTVARepository>();
             services.AddTransient<IStockRepository, StockRepository>();
             services.AddTransient<IAdresseRepository, AdresseRepository>();
+            services.AddTransient<IContactRepository, ContactRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

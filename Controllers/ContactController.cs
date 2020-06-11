@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
 using AppStock.Models.DTO;
-
+using AppStock.Infrastructure.Services.Contact;
 using AppStock.Infrastructure.Services.Adresse;
 
 using AutoMapper;
@@ -20,13 +20,15 @@ namespace AppStock.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IContactService _service_contact;
         private readonly IAdresseService _service_adresse;
 
 
-        public ContactController(ApplicationDbContext context, IMapper mapper, IAdresseService service_adresse)
+        public ContactController(ApplicationDbContext context, IMapper mapper, IContactService service_contact, IAdresseService service_adresse)
         {
             _context = context;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _service_contact = service_contact ?? throw new ArgumentNullException(nameof(service_contact));
             _service_adresse = service_adresse  ?? throw new ArgumentNullException(nameof(service_adresse));
         }
 
