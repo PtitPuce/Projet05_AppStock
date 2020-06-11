@@ -9,6 +9,8 @@ using AppStock.Data;
 using AppStock.Models;
 using AppStock.Models.DTO;
 
+using AppStock.Infrastructure.Services.Adresse;
+
 using AutoMapper;
 
 
@@ -18,12 +20,14 @@ namespace AppStock.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAdresseService _service_adresse;
 
 
-        public ContactController(ApplicationDbContext context, IMapper mapper)
+        public ContactController(ApplicationDbContext context, IMapper mapper, IAdresseService service_adresse)
         {
             _context = context;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _service_adresse = service_adresse  ?? throw new ArgumentNullException(nameof(service_adresse));
         }
 
         // GET: Contact
