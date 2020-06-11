@@ -84,7 +84,7 @@ namespace AppStock
             services.AddTransient<IStockService, StockService>();
             services.AddTransient<IAdresseService, AdresseService>();
             services.AddTransient<IContactService, ContactService>();
-            
+
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
             services.AddTransient<IArticleFamilleRepository, ArticleFamilleRepository>();

@@ -10,9 +10,18 @@ namespace AppStock.Models.Mappers.Profiles
         {
             // vers DTO
             CreateMap<AdresseEntity, AdresseDTO>();
+            CreateMap<AdresseEntity, AdresseDTOWithId>();
 
             // vers Entity
             CreateMap<AdresseDTO, AdresseEntity>()
+                .ForMember(dest => dest.Champ1, opt => opt.MapFrom(src => src.Champ1))
+                .ForMember(dest => dest.Champ2, opt => opt.MapFrom(src => src.Champ2))
+                .ForMember(dest => dest.CodePostal, opt => opt.MapFrom(src => src.CodePostal))
+                .ForMember(dest => dest.Ville, opt => opt.MapFrom(src => src.Ville))
+                .ForAllOtherMembers(opt => opt.Ignore())
+                ;
+            CreateMap<AdresseDTOWithId, AdresseEntity>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Champ1, opt => opt.MapFrom(src => src.Champ1))
                 .ForMember(dest => dest.Champ2, opt => opt.MapFrom(src => src.Champ2))
                 .ForMember(dest => dest.CodePostal, opt => opt.MapFrom(src => src.CodePostal))

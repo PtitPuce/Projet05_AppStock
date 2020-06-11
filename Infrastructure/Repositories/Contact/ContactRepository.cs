@@ -20,12 +20,18 @@ namespace AppStock.Infrastructure.Repositories.Contact
         
         public async Task<IEnumerable<ContactEntity>> GetAllAsync()
         {
-            return await _context.ContactEntities.ToListAsync();
+            return await _context.ContactEntities
+                                    .Include(o => o.Adresse)
+                                    .Include(o => o.User)
+                                    .ToListAsync();
         }
         
         public async Task<ContactEntity> GetOneByIdAsync(int id)
         {
-            return await _context.ContactEntities.FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.ContactEntities
+                                    .Include(o => o.Adresse)
+                                    .Include(o => o.User)
+                                    .FirstOrDefaultAsync(m => m.Id == id);
         }
         
         public async Task<ContactEntity> AddAsync(ContactEntity item)
