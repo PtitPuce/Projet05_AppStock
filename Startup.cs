@@ -26,6 +26,9 @@ using AppStock.Infrastructure.Services.NomTypeTVA;
 using AppStock.Infrastructure.Repositories.NomTypeTVA;
 using AppStock.Infrastructure.Repositories.Stock;
 
+using AutoMapper;
+
+
 namespace AppStock
 {
     public class Startup
@@ -68,6 +71,8 @@ namespace AppStock
             //services.AddRazorPages();
             services.AddMvc();
 
+            services.AddAutoMapper(typeof(Startup).Assembly);
+
             // S E R V I C E S //
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<IArticleFamilleService, ArticleFamilleService>();
@@ -84,7 +89,7 @@ namespace AppStock
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AutoMapper.IConfigurationProvider autoMapper)
         {
             if (env.IsDevelopment())
             {
@@ -97,6 +102,8 @@ namespace AppStock
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            autoMapper.AssertConfigurationIsValid();
             
             app.UseRequestLocalization("en-US");
 

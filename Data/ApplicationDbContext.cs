@@ -19,6 +19,8 @@ namespace AppStock.Data
         public DbSet<ArticleFamilleEntity> ArticleFamilleEntities { get; set; }   
         public DbSet<StockEntity> StockEntities { get; set; }   
         public DbSet<NomTypeTVAEntity> NomTypeTVAEntities { get; set; }   
+        public DbSet<AdresseEntity> AdresseEntities { get; set; }   
+        public DbSet<ContactEntity> ContactEntities { get; set; }   
 
         protected override void OnModelCreating(ModelBuilder builder){
             base.OnModelCreating(builder);
