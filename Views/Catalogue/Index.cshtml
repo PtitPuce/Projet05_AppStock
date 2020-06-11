@@ -1,0 +1,27 @@
+@model IEnumerable<AppStock.Models.ArticleEntity>
+@{
+    ViewData["Title"] = "Index";
+}
+@inject AppStock.Infrastructure.Services.Article.IArticleService Service
+
+<table class="table">
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Libelle)
+                - @Html.DisplayFor(modelItem => item.ArticleFamille.Libelle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrixUnitaire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomTypeTVA.Libelle)
+            </td>
+            <td>
+                <a>Ajouter au Panier</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
