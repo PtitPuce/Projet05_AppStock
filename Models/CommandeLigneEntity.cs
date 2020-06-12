@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppStock.Models
 {
+    [Table("app_commande_ligne")]
     public class CommandeLigneEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

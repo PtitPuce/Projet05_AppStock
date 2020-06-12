@@ -1,0 +1,50 @@
+@model AppStock.Models.CommandeEntity
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>CommandeEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Numero" class="control-label"></label>
+                <input asp-for="Numero" class="form-control" />
+                <span asp-validation-for="Numero" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Commentaire" class="control-label"></label>
+                <input asp-for="Commentaire" class="form-control" />
+                <span asp-validation-for="Commentaire" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactId" class="control-label"></label>
+                <select asp-for="ContactId" class ="form-control" asp-items="ViewBag.ContactId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCommandeStatutId" class="control-label"></label>
+                <select asp-for="NomCommandeStatutId" class ="form-control" asp-items="ViewBag.NomCommandeStatutId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NomCommandeTypeId" class="control-label"></label>
+                <select asp-for="NomCommandeTypeId" class ="form-control" asp-items="ViewBag.NomCommandeTypeId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

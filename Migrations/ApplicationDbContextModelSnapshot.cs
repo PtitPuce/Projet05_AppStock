@@ -117,6 +117,84 @@ namespace AppStock.Migrations
                     b.ToTable("app_article_famille");
                 });
 
+            modelBuilder.Entity("AppStock.Models.CommandeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("commande_uid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Commentaire")
+                        .HasColumnName("commande_commentaire")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("ContactId")
+                        .HasColumnName("commande_contact_uid")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnName("is_deleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("NomCommandeStatutId")
+                        .HasColumnName("commande_statut_uid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NomCommandeTypeId")
+                        .HasColumnName("commande_type_uid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Numero")
+                        .HasColumnName("commande_numero")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnName("updated_at")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("NomCommandeStatutId");
+
+                    b.HasIndex("NomCommandeTypeId");
+
+                    b.ToTable("app_commande");
+                });
+
+            modelBuilder.Entity("AppStock.Models.CommandeLigneEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("commande_ligne_uid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnName("commande_ligne_article_uid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommandeId")
+                        .HasColumnName("commande_ligne_commande_uid")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantite")
+                        .HasColumnName("commande_ligne_quantite")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("CommandeId");
+
+                    b.ToTable("app_commande_ligne");
+                });
+
             modelBuilder.Entity("AppStock.Models.ContactEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -151,6 +229,50 @@ namespace AppStock.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("app_contact");
+                });
+
+            modelBuilder.Entity("AppStock.Models.NomCommandeStatutEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("commande_statut_uid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnName("commande_statut_code")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnName("commande_statut_libelle")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("app_nom_commande_statut");
+                });
+
+            modelBuilder.Entity("AppStock.Models.NomCommandeTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("commande_type_uid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnName("commande_type_code")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnName("commande_type_libelle")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("app_nom_commande_type");
                 });
 
             modelBuilder.Entity("AppStock.Models.NomTypeTVAEntity", b =>
@@ -407,6 +529,42 @@ namespace AppStock.Migrations
                     b.HasOne("AppStock.Models.NomTypeTVAEntity", "NomTypeTVA")
                         .WithMany()
                         .HasForeignKey("NomTypeTVAID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AppStock.Models.CommandeEntity", b =>
+                {
+                    b.HasOne("AppStock.Models.ContactEntity", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppStock.Models.NomCommandeStatutEntity", "NomCommandeStatut")
+                        .WithMany()
+                        .HasForeignKey("NomCommandeStatutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppStock.Models.NomCommandeTypeEntity", "NomCommandeType")
+                        .WithMany()
+                        .HasForeignKey("NomCommandeTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AppStock.Models.CommandeLigneEntity", b =>
+                {
+                    b.HasOne("AppStock.Models.ArticleEntity", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppStock.Models.CommandeEntity", "Commande")
+                        .WithMany("CommandeLignes")
+                        .HasForeignKey("CommandeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -4,10 +4,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AppStock.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitV2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "app_adresse",
+                columns: table => new
+                {
+                    adresse_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    adresse_champ_1 = table.Column<string>(nullable: true),
+                    adresse_champ_2 = table.Column<string>(nullable: true),
+                    adresse_code_postal = table.Column<string>(nullable: true),
+                    adresse_ville = table.Column<string>(nullable: true),
+                    adresse_pays = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_adresse", x => x.adresse_uid);
+                });
+
             migrationBuilder.CreateTable(
                 name: "app_article_famille",
                 columns: table => new
@@ -15,11 +32,40 @@ namespace AppStock.Migrations
                     article_famille_uid = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     article_famille_code = table.Column<string>(nullable: false),
-                    article_famille_libelle = table.Column<string>(nullable: false)
+                    article_famille_libelle = table.Column<string>(nullable: false),
+                    is_deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_app_article_famille", x => x.article_famille_uid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "app_nom_commande_statut",
+                columns: table => new
+                {
+                    commande_statut_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    commande_statut_code = table.Column<string>(nullable: false),
+                    commande_statut_libelle = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_nom_commande_statut", x => x.commande_statut_uid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "app_nom_commande_type",
+                columns: table => new
+                {
+                    commande_type_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    commande_type_code = table.Column<string>(nullable: false),
+                    commande_type_libelle = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_nom_commande_type", x => x.commande_type_uid);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,7 +76,8 @@ namespace AppStock.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     tva_code = table.Column<string>(nullable: false),
                     tva_libelle = table.Column<string>(nullable: false),
-                    tva_taux = table.Column<decimal>(nullable: false)
+                    tva_taux = table.Column<decimal>(nullable: false),
+                    is_deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,7 +133,8 @@ namespace AppStock.Migrations
                     article_libelle = table.Column<string>(nullable: false),
                     article_pu = table.Column<decimal>(nullable: false),
                     article_famille_uid = table.Column<int>(nullable: true),
-                    article_tva_uid = table.Column<int>(nullable: false)
+                    article_tva_uid = table.Column<int>(nullable: false),
+                    is_deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,6 +172,35 @@ namespace AppStock.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "app_contact",
+                columns: table => new
+                {
+                    contact_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    contact_nom = table.Column<string>(nullable: true),
+                    contact_prenom = table.Column<string>(nullable: true),
+                    contact_telephone = table.Column<string>(nullable: true),
+                    contact_adresse_uid = table.Column<int>(nullable: true),
+                    contact_user_identity_uid = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_contact", x => x.contact_uid);
+                    table.ForeignKey(
+                        name: "FK_app_contact_app_adresse_contact_adresse_uid",
+                        column: x => x.contact_adresse_uid,
+                        principalTable: "app_adresse",
+                        principalColumn: "adresse_uid",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_app_contact_AspNetUsers_contact_user_identity_uid",
+                        column: x => x.contact_user_identity_uid,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,7 +293,8 @@ namespace AppStock.Migrations
                 columns: table => new
                 {
                     article_uid = table.Column<int>(nullable: false),
-                    stock_quantite = table.Column<int>(nullable: false)
+                    stock_quantite = table.Column<int>(nullable: false),
+                    is_deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -229,6 +307,71 @@ namespace AppStock.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "app_commande",
+                columns: table => new
+                {
+                    commande_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    commande_numero = table.Column<string>(nullable: true),
+                    commande_commentaire = table.Column<string>(nullable: true),
+                    commande_contact_uid = table.Column<int>(nullable: false),
+                    commande_statut_uid = table.Column<int>(nullable: false),
+                    commande_type_uid = table.Column<int>(nullable: false),
+                    is_deleted = table.Column<bool>(nullable: false),
+                    created_at = table.Column<DateTime>(nullable: false),
+                    updated_at = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_commande", x => x.commande_uid);
+                    table.ForeignKey(
+                        name: "FK_app_commande_app_contact_commande_contact_uid",
+                        column: x => x.commande_contact_uid,
+                        principalTable: "app_contact",
+                        principalColumn: "contact_uid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_app_commande_app_nom_commande_statut_commande_statut_uid",
+                        column: x => x.commande_statut_uid,
+                        principalTable: "app_nom_commande_statut",
+                        principalColumn: "commande_statut_uid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_app_commande_app_nom_commande_type_commande_type_uid",
+                        column: x => x.commande_type_uid,
+                        principalTable: "app_nom_commande_type",
+                        principalColumn: "commande_type_uid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "app_commande_ligne",
+                columns: table => new
+                {
+                    commande_ligne_uid = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    commande_ligne_quantite = table.Column<int>(nullable: false),
+                    commande_ligne_commande_uid = table.Column<int>(nullable: false),
+                    commande_ligne_article_uid = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_commande_ligne", x => x.commande_ligne_uid);
+                    table.ForeignKey(
+                        name: "FK_app_commande_ligne_app_article_commande_ligne_article_uid",
+                        column: x => x.commande_ligne_article_uid,
+                        principalTable: "app_article",
+                        principalColumn: "article_uid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_app_commande_ligne_app_commande_commande_ligne_commande_uid",
+                        column: x => x.commande_ligne_commande_uid,
+                        principalTable: "app_commande",
+                        principalColumn: "commande_uid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_app_article_article_famille_uid",
                 table: "app_article",
@@ -238,6 +381,41 @@ namespace AppStock.Migrations
                 name: "IX_app_article_article_tva_uid",
                 table: "app_article",
                 column: "article_tva_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_commande_commande_contact_uid",
+                table: "app_commande",
+                column: "commande_contact_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_commande_commande_statut_uid",
+                table: "app_commande",
+                column: "commande_statut_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_commande_commande_type_uid",
+                table: "app_commande",
+                column: "commande_type_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_commande_ligne_commande_ligne_article_uid",
+                table: "app_commande_ligne",
+                column: "commande_ligne_article_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_commande_ligne_commande_ligne_commande_uid",
+                table: "app_commande_ligne",
+                column: "commande_ligne_commande_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_contact_contact_adresse_uid",
+                table: "app_contact",
+                column: "contact_adresse_uid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_app_contact_contact_user_identity_uid",
+                table: "app_contact",
+                column: "contact_user_identity_uid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -280,6 +458,9 @@ namespace AppStock.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "app_commande_ligne");
+
+            migrationBuilder.DropTable(
                 name: "app_stock");
 
             migrationBuilder.DropTable(
@@ -298,19 +479,34 @@ namespace AppStock.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "app_commande");
+
+            migrationBuilder.DropTable(
                 name: "app_article");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "app_contact");
+
+            migrationBuilder.DropTable(
+                name: "app_nom_commande_statut");
+
+            migrationBuilder.DropTable(
+                name: "app_nom_commande_type");
 
             migrationBuilder.DropTable(
                 name: "app_article_famille");
 
             migrationBuilder.DropTable(
                 name: "app_nom_type_tva");
+
+            migrationBuilder.DropTable(
+                name: "app_adresse");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
