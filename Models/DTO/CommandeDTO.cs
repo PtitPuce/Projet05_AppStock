@@ -14,16 +14,12 @@ namespace AppStock.Models.DTO
         public int NomCommandeStatutId { get; set; }
         public int NomCommandeTypeId { get; set; }
 
+        
         public ContactEntity Contact {get;set;}
         public NomCommandeStatutEntity NomCommandeStatut {get;set;}
         public NomCommandeTypeEntity NomCommandeType {get;set;}
 
-        public ICollection<CommandeLigneDTOWithId> CommandeLignes {get;set;}
-
+        public ICollection<CommandeLigneEntity> CommandeLignes {get;set;}
         
-        // virtuels
-        public double TotalTVA {get;set;}
-        public double TotalHT {get;set;}
-        public double TotalTTC {get;set;}
     }
 }

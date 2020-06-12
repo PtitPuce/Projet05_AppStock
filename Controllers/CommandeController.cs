@@ -65,9 +65,10 @@ namespace AppStock.Controllers
             // recuperer l'utilisateur courant
             var _user = await _user_manager.GetUserAsync(HttpContext.User);
             var _contact = await _service_contact.GetOneByUserId(_user.Id);
-            var _panier = _service_commande.GetPanierForContactId(_contact.Id);
+            var _panier = await _service_commande.GetPanierForContactId(_contact.Id);
 
-            return View(_mapper.Map<CommandeDTO>(_panier)); // renvoie DTO
+            var _dto = _mapper.Map<CommandeDTO>(_panier);
+            return View(_dto); // renvoie DTO
         }
 
         /*

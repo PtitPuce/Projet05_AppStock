@@ -12,9 +12,9 @@ namespace AppStock.Models
         [Column("commande_uid")]
         public int Id { get; set; }
         [Column("commande_numero")]
-        public string Numero { get; set; }   
+        public string Numero { get; set; } = "Defaut";
         [Column("commande_commentaire")]
-        public string Commentaire { get; set; }        
+        public string Commentaire { get; set; } = "Pas de commentaire";
         [Column("commande_contact_uid")]
         public int ContactId { get; set; }
         [Column("commande_statut_uid")]
