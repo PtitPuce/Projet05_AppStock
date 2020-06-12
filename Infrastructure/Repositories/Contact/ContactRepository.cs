@@ -34,6 +34,15 @@ namespace AppStock.Infrastructure.Repositories.Contact
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
         
+        public async Task<ContactEntity> GetOneByUserIdAsync(string id)
+        {
+            return await _context.ContactEntities
+                                    .Include(o => o.Adresse)
+                                    .Include(o => o.User)
+                                    .FirstOrDefaultAsync(m => m.UserId == id);
+        }
+        
+
         public async Task<ContactEntity> AddAsync(ContactEntity item)
         {
             _context.ContactEntities.Add(item);

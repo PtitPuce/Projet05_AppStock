@@ -23,6 +23,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
             return await _context.CommandeEntities
                                     .Include(o => o.Contact)
                                     .Include(o => o.NomCommandeStatut)
+                                    .Include(o => o.NomCommandeType)
                                     .Include(o => o.CommandeLignes)
                                     .ToListAsync();
         }
@@ -32,9 +33,31 @@ namespace AppStock.Infrastructure.Repositories.Commande
             return await _context.CommandeEntities
                                     .Include(o => o.Contact)
                                     .Include(o => o.NomCommandeStatut)
+                                    .Include(o => o.NomCommandeType)
                                     .Include(o => o.CommandeLignes)
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
+
+        public async Task<CommandeEntity> GetPanierByContactId(int id)
+        {
+            var _panier = await _context.CommandeEntities
+                                    .Where(o => o.NomCommandeStatut.Code == "P" 
+                                                && o.ContactId == id)
+                                    .FirstOrDefaultAsync();
+            
+            if(_panier is null || _panier.Id == 0)
+            {
+                CommandeEntity _commande = new CommandeEntity();
+                _commande.ContactId = id;
+                _commande.NomCommandeStatutId = 1; // hardCode "PANIER"
+                _commande.NomCommandeTypeId = 2; // hardCode "CLIENT"
+                await AddAsync(_commande);
+                return await GetOneByIdAsync(_commande.Id);
+            }
+
+            return await GetOneByIdAsync(_panier.Id);
+        }
+
         
         public async Task<CommandeEntity> AddAsync(CommandeEntity item)
         {

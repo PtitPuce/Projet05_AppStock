@@ -10,7 +10,7 @@ namespace AppStock.Models
         [Column("commande_ligne_uid")]
         public int Id { get; set; }
         [Column("commande_ligne_quantite")]
-        public int Quantite { get; set; }
+        public int Quantite { get; set; } = 1; // defaut 1
 
         [Column("commande_ligne_commande_uid")]
         public int CommandeId { get; set; }

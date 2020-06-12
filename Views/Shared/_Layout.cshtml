@@ -31,7 +31,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index">Articles</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index">Articles</a>@Url.Action()
                         </li>
                         
                         <li class="nav-item">
@@ -44,6 +44,10 @@
                         
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Stock" asp-action="Index">Stocks</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Commande" asp-action="Panier">Panier</a>
                         </li>
                         
                     </ul>

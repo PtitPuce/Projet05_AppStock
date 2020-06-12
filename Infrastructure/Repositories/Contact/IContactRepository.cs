@@ -10,6 +10,7 @@ namespace AppStock.Infrastructure.Repositories.Contact
         
         Task<IEnumerable<ContactEntity>> GetAllAsync();
         Task<ContactEntity> GetOneByIdAsync(int id);
+        Task<ContactEntity> GetOneByUserIdAsync(string id);
         Task<ContactEntity> AddAsync(ContactEntity item);
         Task<ContactEntity> UpdateAsync(ContactEntity item);
         Task<ContactEntity> DeleteAsync(ContactEntity item);

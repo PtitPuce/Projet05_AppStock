@@ -1,0 +1,29 @@
+@model AppStock.Models.DTO.CommandeDTO
+@{
+    ViewData["Title"] = "Panier";
+}
+
+<h1>Index</h1>
+
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>
+                @Model.Numero
+            </td>
+            <td>
+                @Model.Commentaire
+            </td>
+            <td>
+                contact = @Model.ContactId
+            </td>
+            <td>
+                statut = @Model.NomCommandeStatutId
+            </td>
+            <td>
+                type = @Model.NomCommandeTypeId
+            </td>
+        </tr>
+    </tbody>
+</table>

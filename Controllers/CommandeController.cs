@@ -7,16 +7,47 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Models.DTO;
+using AppStock.Infrastructure.Services.Article;
+using AppStock.Infrastructure.Services.Commande;
+using AppStock.Infrastructure.Services.Contact;
+using AppStock.Infrastructure.Services.Stock;
+using AppStock.Infrastructure.Services.Adresse;
+
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace AppStock.Controllers
 {
     public class CommandeController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CommandeController(ApplicationDbContext context)
+        private readonly UserManager<IdentityUser> _user_manager; 
+        private readonly IMapper _mapper;
+        private readonly IArticleService _service_article;
+        private readonly ICommandeService _service_commande;
+        private readonly IContactService _service_contact;
+        private readonly IStockService _service_stock;
+        private readonly IAdresseService _service_adresse;
+         
+        public CommandeController(
+                            ApplicationDbContext context
+                            , UserManager<IdentityUser> user_manager 
+                            , IMapper mapper 
+                            , IArticleService service_article 
+                            , ICommandeService service_commande 
+                            , IContactService service_contact 
+                            , IStockService service_stock 
+                            , IAdresseService service_adresse)
         {
             _context = context;
+            _user_manager = user_manager;
+            _mapper = mapper ;
+            _service_article = service_article ;
+            _service_commande = service_commande ;
+            _service_contact = service_contact ;
+            _service_stock = service_stock ;
+            _service_adresse = service_adresse;
         }
 
         // GET: Commande
@@ -25,6 +56,33 @@ namespace AppStock.Controllers
             var applicationDbContext = _context.CommandeEntities.Include(c => c.Contact).Include(c => c.NomCommandeStatut).Include(c => c.NomCommandeType);
             return View(await applicationDbContext.ToListAsync());
         }
+
+
+        // Panier :: affichage du Panier
+        [HttpGet]
+        public async Task<IActionResult> Panier()
+        {
+            // recuperer l'utilisateur courant
+            var _user = await _user_manager.GetUserAsync(HttpContext.User);
+            var _contact = await _service_contact.GetOneByUserId(_user.Id);
+            var _panier = _service_commande.GetPanierForContactId(_contact.Id);
+
+            return View(_mapper.Map<CommandeDTO>(_panier)); // renvoie DTO
+        }
+
+        /*
+        [HttpGet]
+        public async Task<IActionResult> AddArticleToPanier( int id )
+        {
+            // recuperer l'utilisateur courant
+            // SI pas de Panier -> go Creation du Panier
+
+            // ENSUITE Ajout de Article au Panier [quantite = 1]
+
+            return RedirectToAction(nameof(Panier));
+        }
+        */
+
 
         // GET: Commande/Details/5
         public async Task<IActionResult> Details(int? id)

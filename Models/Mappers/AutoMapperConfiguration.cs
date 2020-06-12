@@ -11,6 +11,8 @@ namespace AppStock.Models.Mappers
                 {
                     cfg.AddProfile( new AdresseProfile() );
                     cfg.AddProfile( new ContactProfile() );
+                    cfg.AddProfile( new CommandeProfile() );
+                    cfg.AddProfile( new CommandeLigneProfile() );
                 }
             );
         }

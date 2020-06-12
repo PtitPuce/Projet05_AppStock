@@ -9,6 +9,7 @@ namespace AppStock.Infrastructure.Services.Contact
         #pragma warning disable 1591
         Task<IEnumerable<ContactEntity>> GetAll();
         Task<ContactEntity> GetOneById(int id);
+        Task<ContactEntity> GetOneByUserId(string id);
         Task<ContactEntity> Add(ContactEntity item);
         Task<ContactEntity> Update(ContactEntity item);
         Task DeleteById(int id);

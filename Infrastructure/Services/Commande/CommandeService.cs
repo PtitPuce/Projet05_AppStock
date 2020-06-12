@@ -6,14 +6,17 @@ using AppStock.Models;
 using AppStock.Utils;
 using AppStock.Infrastructure.Exceptions;
 using AppStock.Infrastructure.Repositories.Commande;
+using AppStock.Infrastructure.Services.CommandeLigne;
 
 namespace AppStock.Infrastructure.Services.Commande
 {
     public class CommandeService : ICommandeService
     {
         private readonly ICommandeRepository _repository;
-        public CommandeService(ICommandeRepository repository)
+        private readonly ICommandeLigneService _service_ligne;
+        public CommandeService(ICommandeRepository repository,  ICommandeLigneService service_ligne)
         {
+             _service_ligne = service_ligne;
             _repository = repository ?? throw new ArgumentNullException(nameof(ICommandeRepository));
         }
 
@@ -42,6 +45,14 @@ namespace AppStock.Infrastructure.Services.Commande
         {
             return await _repository.GetOneByIdAsync(id);
         }
+
+        public async Task<CommandeEntity> GetPanierForContactId(int id)
+        {
+            // on regarde si un enregistrement existe 
+            var _panier = await _repository.GetPanierByContactId(id);
+            return _panier;
+        }
+
 
         public async Task<CommandeEntity> Update(CommandeEntity item)
         {

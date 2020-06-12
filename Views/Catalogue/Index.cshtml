@@ -19,7 +19,7 @@
                 @Html.DisplayFor(modelItem => item.NomTypeTVA.Libelle)
             </td>
             <td>
-                <a>Ajouter au Panier</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Commande" asp-action="AddArticleToPanier" asp-route-id="@item.Id" >Ajouter au Panier</a>
             </td>
         </tr>
 }

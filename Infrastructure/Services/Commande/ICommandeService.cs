@@ -13,6 +13,8 @@ namespace AppStock.Infrastructure.Services.Commande
         Task<CommandeEntity> Update(CommandeEntity item);
         Task DeleteById(int id);
         bool Exist(int id);
+
+        Task<CommandeEntity> GetPanierForContactId(int id);
         
 
         #pragma warning restore 1591         

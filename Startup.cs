@@ -118,7 +118,7 @@ namespace AppStock
                 app.UseHsts();
             }
 
-            autoMapper.AssertConfigurationIsValid();
+            //autoMapper.AssertConfigurationIsValid();
             
             app.UseRequestLocalization("en-US");
 
