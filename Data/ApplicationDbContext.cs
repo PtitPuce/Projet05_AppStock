@@ -21,6 +21,10 @@ namespace AppStock.Data
         public DbSet<NomTypeTVAEntity> NomTypeTVAEntities { get; set; }   
         public DbSet<AdresseEntity> AdresseEntities { get; set; }   
         public DbSet<ContactEntity> ContactEntities { get; set; }   
+        public DbSet<CommandeEntity> CommandeEntities { get; set; }  
+        public DbSet<NomCommandeStatutEntity> NomCommandeStatutEntities { get; set; } 
+        public DbSet<NomCommandeTypeEntity> NomCommandeTypeEntities { get; set; }   
+        public DbSet<CommandeLigneEntity> CommandeClientLigneEntities { get; set; }  
 
         protected override void OnModelCreating(ModelBuilder builder){
             base.OnModelCreating(builder);

@@ -22,6 +22,8 @@ using AppStock.Infrastructure.Services.NomTypeTVA;
 using AppStock.Infrastructure.Services.Stock;
 using AppStock.Infrastructure.Services.Adresse;
 using AppStock.Infrastructure.Services.Contact;
+using AppStock.Infrastructure.Services.Commande;
+using AppStock.Infrastructure.Services.CommandeLigne;
 
 using AppStock.Infrastructure.Repositories.Article;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
@@ -29,6 +31,8 @@ using AppStock.Infrastructure.Repositories.NomTypeTVA;
 using AppStock.Infrastructure.Repositories.Stock;
 using AppStock.Infrastructure.Repositories.Adresse;
 using AppStock.Infrastructure.Repositories.Contact;
+using AppStock.Infrastructure.Repositories.Commande;
+using AppStock.Infrastructure.Repositories.CommandeLigne;
 
 using AutoMapper;
 
@@ -84,6 +88,8 @@ namespace AppStock
             services.AddTransient<IStockService, StockService>();
             services.AddTransient<IAdresseService, AdresseService>();
             services.AddTransient<IContactService, ContactService>();
+            services.AddTransient<ICommandeService, CommandeService>();
+            services.AddTransient<ICommandeLigneService, CommandeLigneService>();
 
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
@@ -92,6 +98,8 @@ namespace AppStock
             services.AddTransient<IStockRepository, StockRepository>();
             services.AddTransient<IAdresseRepository, AdresseRepository>();
             services.AddTransient<IContactRepository, ContactRepository>();
+            services.AddTransient<ICommandeRepository, CommandeRepository>();
+            services.AddTransient<ICommandeLigneRepository, CommandeLigneRepository>();
             
         }
 
