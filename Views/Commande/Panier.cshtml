@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Panier";
 }
-@inject AppStock.Infrastructure.Services.Article.IArticleService Service
+@inject AppStock.Infrastructure.Services.CommandeLigne.ICommandeLigneService ServiceLigne
 
 <h1>Index</h1>
 
@@ -44,9 +44,25 @@
     {
         @foreach (CommandeLigneEntity ligne in Model.CommandeLignes)
         {
-            <p>@ligne.ArticleId</p>
-            <p>@ligne.Article.Libelle</p>
-            <p>@ligne.Quantite</p>
+            <table>
+                <td>@ligne.Article.Libelle</td>
+                <td>
+                    
+                    <form asp-action="UpdateLigneQuantite" method="POST">
+                        <input type="hidden" asp-for="@ligne.Id" name="ligne_Id">
+                        <div class="form-group">
+                            <input asp-for="@ligne.Quantite" name="ligne_Quantite" class="form-control" />
+                            <span asp-validation-for="@ligne.Quantite" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </td>
+            </table>
+            <p>@ServiceLigne.getPriceTotals(ligne)</p>
+
+            
         }
     }
     

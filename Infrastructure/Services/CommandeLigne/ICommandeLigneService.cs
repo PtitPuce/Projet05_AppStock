@@ -14,6 +14,8 @@ namespace AppStock.Infrastructure.Services.CommandeLigne
         Task DeleteById(int id);
         bool Exist(int id);
 
+        object getPriceTotals(CommandeLigneEntity item);
+
         #pragma warning restore 1591         
     }
 }

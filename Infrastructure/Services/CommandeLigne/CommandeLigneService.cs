@@ -61,5 +61,22 @@ namespace AppStock.Infrastructure.Services.CommandeLigne
         public bool Exist(int id){
             return _repository.Exist(id);
         }
+
+
+        public object getPriceTotals(CommandeLigneEntity item)
+        {
+            var _ht = item.Quantite * item.Article.PrixUnitaire;
+            var _tva = _ht * (item.Article.NomTypeTVA.Taux /100.0M);
+            var _ttc = _ht + _tva;
+
+            var data = new
+            {
+                HT = _ht,
+                TVA = _tva,
+                TTC = _ttc
+            };
+
+            return data;
+        }
     }
 }

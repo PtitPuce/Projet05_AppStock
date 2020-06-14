@@ -10,6 +10,7 @@ using AppStock.Models;
 using AppStock.Models.DTO;
 using AppStock.Infrastructure.Services.Article;
 using AppStock.Infrastructure.Services.Commande;
+using AppStock.Infrastructure.Services.CommandeLigne;
 using AppStock.Infrastructure.Services.Contact;
 using AppStock.Infrastructure.Services.Stock;
 using AppStock.Infrastructure.Services.Adresse;
@@ -26,6 +27,7 @@ namespace AppStock.Controllers
         private readonly IMapper _mapper;
         private readonly IArticleService _service_article;
         private readonly ICommandeService _service_commande;
+        private readonly ICommandeLigneService _service_commande_ligne;
         private readonly IContactService _service_contact;
         private readonly IStockService _service_stock;
         private readonly IAdresseService _service_adresse;
@@ -36,6 +38,7 @@ namespace AppStock.Controllers
                             , IMapper mapper 
                             , IArticleService service_article 
                             , ICommandeService service_commande 
+                            , ICommandeLigneService service_commande_ligne
                             , IContactService service_contact 
                             , IStockService service_stock 
                             , IAdresseService service_adresse)
@@ -45,6 +48,7 @@ namespace AppStock.Controllers
             _mapper = mapper ;
             _service_article = service_article ;
             _service_commande = service_commande ;
+            _service_commande_ligne = service_commande_ligne;
             _service_contact = service_contact ;
             _service_stock = service_stock ;
             _service_adresse = service_adresse;
@@ -82,6 +86,18 @@ namespace AppStock.Controllers
 
             // ENSUITE Ajout de Article au Panier [quantite = 1]
             await _service_commande.AddArticle(_panier, id);
+            return RedirectToAction(nameof(Panier));
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateLigneQuantite(int ligne_Quantite, int ligne_Id)
+        {
+            CommandeLigneEntity ligne = await _service_commande_ligne.GetOneById(ligne_Id);
+            ligne.Quantite = ligne_Quantite;
+
+            await _service_commande_ligne.Update(ligne);
+
             return RedirectToAction(nameof(Panier));
         }
         
