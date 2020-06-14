@@ -18,6 +18,27 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Catalogue
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Catalogue" asp-action="Index">Articles</a></li>
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Commande" asp-action="Panier">Panier</a></li>
+                        </ul>
+                    </div> 
+
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Administration
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index">Articles</a></li>
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="ArticleFamille" asp-action="Index">Familles</a></li>
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="NomTypeTVA" asp-action="Index">TVA</a></li>
+                            <li><a class="nav-link text-dark" asp-area="" asp-controller="Stock" asp-action="Index">Stocks</a></li>
+                        </ul>
+                    </div> 
+                    
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -25,27 +46,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index">Articles</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ArticleFamille" asp-action="Index">Familles</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="NomTypeTVA" asp-action="Index">TVA</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Stock" asp-action="Index">Stocks</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Commande" asp-action="Panier">Panier</a>
-                        </li>
-                        
                     </ul>
                 </div>
             </div>
