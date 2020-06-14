@@ -71,18 +71,20 @@ namespace AppStock.Controllers
             return View(_dto); // renvoie DTO
         }
 
-        /*
+        
         [HttpGet]
         public async Task<IActionResult> AddArticleToPanier( int id )
         {
             // recuperer l'utilisateur courant
-            // SI pas de Panier -> go Creation du Panier
+            var _user = await _user_manager.GetUserAsync(HttpContext.User);
+            var _contact = await _service_contact.GetOneByUserId(_user.Id);
+            var _panier = await _service_commande.GetPanierForContactId(_contact.Id);
 
             // ENSUITE Ajout de Article au Panier [quantite = 1]
-
+            await _service_commande.AddArticle(_panier, id);
             return RedirectToAction(nameof(Panier));
         }
-        */
+        
 
 
         // GET: Commande/Details/5

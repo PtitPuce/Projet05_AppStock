@@ -9,11 +9,10 @@ namespace AppStock.Infrastructure.Services.CommandeLigne
         #pragma warning disable 1591
         Task<IEnumerable<CommandeLigneEntity>> GetAll();
         Task<CommandeLigneEntity> GetOneById(int id);
-        Task<CommandeLigneEntity> Add(CommandeLigneEntity item);
+        Task<CommandeLigneEntity> AddArticle(CommandeEntity commande, int id_article);
         Task<CommandeLigneEntity> Update(CommandeLigneEntity item);
         Task DeleteById(int id);
         bool Exist(int id);
-        
 
         #pragma warning restore 1591         
     }

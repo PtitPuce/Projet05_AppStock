@@ -65,5 +65,16 @@ namespace AppStock.Infrastructure.Services.Commande
         public bool Exist(int id){
             return _repository.Exist(id);
         }
+
+
+        // ARTICLES
+        public async Task<CommandeLigneEntity> AddArticle(CommandeEntity commande, int id_article)
+        {
+            /*
+                delegation service CommandeLigne
+            */
+            return await _service_ligne.AddArticle(commande, id_article);
+
+        }
     }
 }

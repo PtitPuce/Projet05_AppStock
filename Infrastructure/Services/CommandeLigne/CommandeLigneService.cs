@@ -6,20 +6,27 @@ using AppStock.Models;
 using AppStock.Utils;
 using AppStock.Infrastructure.Exceptions;
 using AppStock.Infrastructure.Repositories.CommandeLigne;
+using AppStock.Infrastructure.Services.Article;
 
 namespace AppStock.Infrastructure.Services.CommandeLigne
 {
     public class CommandeLigneService : ICommandeLigneService
     {
         private readonly ICommandeLigneRepository _repository;
-        public CommandeLigneService(ICommandeLigneRepository repository)
+        private readonly IArticleService _service_article;
+        public CommandeLigneService(ICommandeLigneRepository repository, IArticleService service_article)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(ICommandeLigneRepository));
+            _service_article = service_article ?? throw new ArgumentNullException(nameof(IArticleService));
         }
 
-        public async Task<CommandeLigneEntity> Add(CommandeLigneEntity item)
+        public async Task<CommandeLigneEntity> AddArticle(CommandeEntity commande, int id_article)
         {
-            return await _repository.AddAsync(item);
+            CommandeLigneEntity ligne = new CommandeLigneEntity();
+            ligne.Commande = commande;
+            ligne.Article = await _service_article.GetOneById(id_article);
+
+            return await _repository.AddAsync(ligne);
         }
 
         public async Task DeleteById(int id)

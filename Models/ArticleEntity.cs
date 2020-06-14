@@ -19,10 +19,10 @@ namespace AppStock.Models
         [Column("article_pu")]
         public decimal PrixUnitaire { get; set; }
         [Column("article_famille_uid")]
-        public int? ArticleFamilleID { get; set; }
+        public int? ArticleFamilleId { get; set; }
         [Column("article_tva_uid")]
         [Required(ErrorMessage="Dis donc !!!")]
-        public int NomTypeTVAID { get; set; }
+        public int NomTypeTVAId { get; set; }
         
         // soft delete
         [Column("is_deleted")]

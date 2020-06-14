@@ -19,6 +19,8 @@ namespace AppStock.Models.Mappers.Profiles
                 .ForMember(dest => dest.NomCommandeTypeId, opt => opt.MapFrom(src => src.NomCommandeTypeId))
                 .ForMember(dest => dest.Numero, opt => opt.MapFrom(src => src.Numero))
                 .ForMember(dest => dest.Commentaire, opt => opt.MapFrom(src => src.Commentaire))
+                .ForMember(dest => dest.CommandeLignes, opt => opt.MapFrom(src => src.CommandeLignes))
+
                 .ForAllOtherMembers(opt => opt.Ignore())
                 ;
         }

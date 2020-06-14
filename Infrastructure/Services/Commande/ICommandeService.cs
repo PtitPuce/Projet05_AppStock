@@ -15,6 +15,10 @@ namespace AppStock.Infrastructure.Services.Commande
         bool Exist(int id);
 
         Task<CommandeEntity> GetPanierForContactId(int id);
+
+        // ARTICLES
+        Task<CommandeLigneEntity> AddArticle(CommandeEntity commande, int id_article);
+
         
 
         #pragma warning restore 1591         

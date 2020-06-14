@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Panier";
 }
+@inject AppStock.Infrastructure.Services.Article.IArticleService Service
 
 <h1>Index</h1>
 
@@ -25,8 +26,28 @@
                 statut = @Model.NomCommandeStatutId
             </td>
             <td>
+                statut = @Model.NomCommandeStatut.Libelle
+            </td>
+            <td>
                 type = @Model.NomCommandeTypeId
             </td>
         </tr>
     </tbody>
 </table>
+
+<div>
+    @if(Model.CommandeLignes.Count == 0)
+    {
+        <p>Pas d'Article</p>
+    }
+    else
+    {
+        @foreach (CommandeLigneEntity ligne in Model.CommandeLignes)
+        {
+            <p>@ligne.ArticleId</p>
+            <p>@ligne.Article.Libelle</p>
+            <p>@ligne.Quantite</p>
+        }
+    }
+    
+</div>

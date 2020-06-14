@@ -76,8 +76,8 @@ namespace AppStock.Controllers
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleID);
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAID);
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleId);
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAId);
             return View(article);
         }
 
@@ -93,8 +93,8 @@ namespace AppStock.Controllers
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleID);
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAID);
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleId);
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAId);
             return View(article);
         }
 
@@ -133,8 +133,8 @@ namespace AppStock.Controllers
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
-            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleID);
-            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAID);
+            ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleId);
+            ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAId);
             return View(article);
         }
 

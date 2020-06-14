@@ -24,7 +24,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
                                     .Include(o => o.Contact)
                                     .Include(o => o.NomCommandeStatut)
                                     .Include(o => o.NomCommandeType)
-                                    .Include(o => o.CommandeLignes)
+                                    .Include(o => o.CommandeLignes).ThenInclude(o => o.Article)
                                     .ToListAsync();
         }
         
@@ -34,7 +34,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
                                     .Include(o => o.Contact)
                                     .Include(o => o.NomCommandeStatut)
                                     .Include(o => o.NomCommandeType)
-                                    .Include(o => o.CommandeLignes)
+                                    .Include(o => o.CommandeLignes).ThenInclude(o => o.Article)
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
 
@@ -51,16 +51,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
                 _commande.ContactId = id;
                 _commande.NomCommandeStatutId = 1; // hardCode "PANIER"
                 _commande.NomCommandeTypeId = 2; // hardCode "CLIENT"
-
-                // _commande.Contact = await _context.ContactEntities.FindAsync(id);
-                // _commande.NomCommandeStatut = await _context.NomCommandeStatutEntities
-                //                                     .Where(i => i.Code == "P")
-                //                                     .FirstOrDefaultAsync();
-                // _commande.NomCommandeType = await _context.NomCommandeTypeEntities
-                //                                     .FindAsync(2);
-
-                // _commande.CommandeLignes = new List<CommandeLigneEntity>();
-
+                
                 await AddAsync(_commande);
                 return await GetOneByIdAsync(_commande.Id);
             }
