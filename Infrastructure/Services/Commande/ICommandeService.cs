@@ -11,6 +11,7 @@ namespace AppStock.Infrastructure.Services.Commande
         Task<CommandeEntity> GetOneById(int id);
         Task<CommandeEntity> Add(CommandeEntity item);
         Task<CommandeEntity> Update(CommandeEntity item);
+        Task<CommandeEntity> Validate(CommandeEntity item);
         Task DeleteById(int id);
         bool Exist(int id);
 

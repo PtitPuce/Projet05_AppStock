@@ -1,3 +1,4 @@
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,19 @@ namespace AppStock.Controllers
             var _contact = await _service_contact.GetOneByUserId(_user.Id);
             var _panier = await _service_commande.GetPanierForContactId(_contact.Id);
 
+            // Vérification de la présence de l'article dans la commande
+            // Si présent, on ajoute +1 à sa quantité
+            foreach (CommandeLigneEntity l in _panier.CommandeLignes)
+            {
+                if (l.ArticleId == id)
+                {
+                    l.Quantite ++;
+                    await _service_commande_ligne.Update(l);
+                    return RedirectToAction(nameof(Panier));
+                }
+            }
+
+            // Si l'article est absent, ajout à la commande
             // ENSUITE Ajout de Article au Panier [quantite = 1]
             await _service_commande.AddArticle(_panier, id);
             return RedirectToAction(nameof(Panier));
@@ -100,8 +114,29 @@ namespace AppStock.Controllers
 
             return RedirectToAction(nameof(Panier));
         }
-        
 
+        public async Task<IActionResult> DeleteLigne(int id)
+        {
+            await _service_commande_ligne.DeleteById(id);
+
+            return RedirectToAction(nameof(Panier));
+        }
+
+        public async Task<IActionResult> AdresseLivraison(int id)
+        {
+            var _commande = await _service_commande.GetOneById(id);
+            var _dto = _mapper.Map<CommandeDTO>(_commande);
+            return View(_dto); // renvoie DTO
+        }
+
+        public async Task<IActionResult> ValiderCommande(CommandeDTO _dto)
+        {
+            AdresseEntity adresse_db = _mapper.Map<AdresseEntity>(_dto.Contact.Adresse);
+            var _commande = await _service_commande.GetOneById(_dto.Id);
+            _commande.Adresse = _dto.Contact.Adresse;
+            await _service_commande.Validate(_commande);
+            return RedirectToAction(nameof(Panier));
+        }
 
         // GET: Commande/Details/5
         public async Task<IActionResult> Details(int? id)

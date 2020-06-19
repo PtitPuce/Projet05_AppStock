@@ -15,6 +15,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
         Task<CommandeEntity> AddAsync(CommandeEntity item);
         Task<CommandeEntity> UpdateAsync(CommandeEntity item);
         Task<CommandeEntity> DeleteAsync(CommandeEntity item);
+        Task<CommandeEntity> ValidateAsync(CommandeEntity item);
         bool Exist(int id);
 
 

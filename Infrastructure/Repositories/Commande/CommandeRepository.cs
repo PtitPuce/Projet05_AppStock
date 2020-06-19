@@ -22,6 +22,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
         {
             return await _context.CommandeEntities
                                     .Include(o => o.Contact)
+                                        .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeStatut)
                                     .Include(o => o.NomCommandeType)
                                     .Include(o => o.CommandeLignes)
@@ -34,6 +35,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
         {
             return await _context.CommandeEntities
                                     .Include(o => o.Contact)
+                                        .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeStatut)
                                     .Include(o => o.NomCommandeType)
                                     .Include(o => o.CommandeLignes)
@@ -81,6 +83,14 @@ namespace AppStock.Infrastructure.Repositories.Commande
         public async Task<CommandeEntity> DeleteAsync(CommandeEntity item)
         {
             item.IsDeleted = true;
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+            return item;
+        }
+
+        public async Task<CommandeEntity> ValidateAsync(CommandeEntity item)
+        {
+            item.NomCommandeStatutId = 2; // hardCode "VALIDEE"
             _context.Update(item);
             await _context.SaveChangesAsync();
             return item;

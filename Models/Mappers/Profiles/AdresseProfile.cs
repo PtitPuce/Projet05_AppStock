@@ -18,6 +18,7 @@ namespace AppStock.Models.Mappers.Profiles
                 .ForMember(dest => dest.Champ2, opt => opt.MapFrom(src => src.Champ2))
                 .ForMember(dest => dest.CodePostal, opt => opt.MapFrom(src => src.CodePostal))
                 .ForMember(dest => dest.Ville, opt => opt.MapFrom(src => src.Ville))
+                .ForMember(dest => dest.Pays, opt => opt.MapFrom(src => src.Pays))
                 .ForAllOtherMembers(opt => opt.Ignore())
                 ;
             CreateMap<AdresseDTOWithId, AdresseEntity>()
@@ -26,6 +27,7 @@ namespace AppStock.Models.Mappers.Profiles
                 .ForMember(dest => dest.Champ2, opt => opt.MapFrom(src => src.Champ2))
                 .ForMember(dest => dest.CodePostal, opt => opt.MapFrom(src => src.CodePostal))
                 .ForMember(dest => dest.Ville, opt => opt.MapFrom(src => src.Ville))
+                .ForMember(dest => dest.Pays, opt => opt.MapFrom(src => src.Pays))
                 .ForAllOtherMembers(opt => opt.Ignore())
                 ;
         }

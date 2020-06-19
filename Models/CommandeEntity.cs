@@ -21,6 +21,8 @@ namespace AppStock.Models
         public int NomCommandeStatutId { get; set; }
         [Column("commande_type_uid")]
         public int NomCommandeTypeId { get; set; }
+        [Column("commande_adresse_uid")]
+        public int? AdresseId { get; set; }
         
         // soft delete
         [Column("is_deleted")]
@@ -35,6 +37,7 @@ namespace AppStock.Models
         public ContactEntity Contact { get;set; }
         public NomCommandeStatutEntity NomCommandeStatut { get;set; }
         public NomCommandeTypeEntity NomCommandeType { get;set; }
+        public AdresseEntity Adresse { get; set; }
         public ICollection<CommandeLigneEntity> CommandeLignes { get; set; }
     }
 }
