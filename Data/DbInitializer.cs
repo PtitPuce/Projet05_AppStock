@@ -28,6 +28,22 @@ namespace AppStock.Data
                 context.SaveChanges();
             }
 
+            // Seed statuts des inventaires
+            if (!context.NomInventaireStatutEntities.Any())
+            {
+                var inventaire_status = new NomInventaireStatutEntity[]
+                {
+                    new NomInventaireStatutEntity { Code = "E",   Libelle = "En cours" },
+                    new NomInventaireStatutEntity { Code = "T",   Libelle = "Terminé" }
+                };
+
+                foreach (NomInventaireStatutEntity s in inventaire_status)
+                {
+                    context.NomInventaireStatutEntities.Add(s);
+                }
+                context.SaveChanges();
+            }
+
             // Seed types de commande
             if (!context.NomCommandeTypeEntities.Any())
             {
