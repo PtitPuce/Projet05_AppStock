@@ -12,7 +12,7 @@ namespace AppStock.Models
         [Column("inventaire_uid")]
         public int Id { get; set; }
         [Column("inventaire_user_uid")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [Column("inventaire_statut_uid")]
         public int NomInventaireStatutId { get; set; }
         [Column("article_famille_uid")]
