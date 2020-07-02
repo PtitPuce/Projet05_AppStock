@@ -25,6 +25,7 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
                                     .Include(o => o.User)
                                     .Include(o => o.ArticleFamille)
                                         .ThenInclude (o => o.Articles)
+                                            .ThenInclude(o => o.Stock)
                                     .Include(o => o.InventaireLignes)
                                     .ToListAsync();
         }
@@ -36,12 +37,14 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
                                     .Include(o => o.User)
                                     .Include(o => o.ArticleFamille)
                                         .ThenInclude (o => o.Articles)
+                                            .ThenInclude(o => o.Stock)
                                     .Include(o => o.InventaireLignes)
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
         
         public async Task<InventaireEntity> AddAsync(InventaireEntity item)
         {
+            item.NomInventaireStatutId = 1; // hardCode "En cours"
             _context.InventaireEntities.Add(item);
             await _context.SaveChangesAsync();
             return item;

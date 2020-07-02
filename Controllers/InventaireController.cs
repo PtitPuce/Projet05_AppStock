@@ -10,6 +10,8 @@ using AppStock.Models;
 using Microsoft.AspNetCore.Identity;
 using AppStock.Infrastructure.Services.Inventaire;
 using AppStock.Infrastructure.Services.InventaireLigne;
+using AppStock.Infrastructure.Services.Stock;
+using AppStock.Infrastructure.Services.ArticleFamille;
 
 namespace AppStock.Controllers
 {
@@ -19,15 +21,21 @@ namespace AppStock.Controllers
         private readonly UserManager<IdentityUser> _user_manager; 
         private readonly IInventaireService _service_inventaire;
         private readonly IInventaireLigneService _service_inventaire_ligne;
+        private readonly IStockService _service_stock;
+        private readonly IArticleFamilleService _service_article_famille;
         public InventaireController( ApplicationDbContext context
                             , UserManager<IdentityUser> user_manager 
                             , IInventaireService service_inventaire 
-                            , IInventaireLigneService service_inventaire_ligne)
+                            , IInventaireLigneService service_inventaire_ligne
+                            , IStockService service_stock
+                            , IArticleFamilleService service_article_famille)
         {
             _context = context;
             _user_manager = user_manager;
             _service_inventaire = service_inventaire ;
             _service_inventaire_ligne = service_inventaire_ligne;
+            _service_stock = service_stock;
+            _service_article_famille = service_article_famille;
         }
 
         // GET: Inventaire
@@ -80,25 +88,17 @@ namespace AppStock.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", item.ArticleFamilleId);
-            ViewData["NomInventaireStatutId"] = new SelectList(_context.NomInventaireStatutEntities, "Id", "Code", item.NomInventaireStatutId);
             return View(item);
         }
 
         // GET: Inventaire/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var inventaireEntity = await _context.InventaireEntities.FindAsync(id);
+            var inventaireEntity = await _service_inventaire.GetOneById(id);
             if (inventaireEntity == null)
             {
                 return NotFound();
             }
-            ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", inventaireEntity.ArticleFamilleId);
-            ViewData["NomInventaireStatutId"] = new SelectList(_context.NomInventaireStatutEntities, "Id", "Code", inventaireEntity.NomInventaireStatutId);
             return View(inventaireEntity);
         }
 

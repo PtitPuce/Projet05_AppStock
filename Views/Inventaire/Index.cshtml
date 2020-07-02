@@ -16,16 +16,7 @@
                 @Html.DisplayNameFor(model => model.UserId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateCloture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NomInventaireStatut)
@@ -43,22 +34,13 @@
                 @Html.DisplayFor(modelItem => item.UserId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCloture)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
+                @Html.DisplayFor(modelItem => item.NomInventaireStatut.Libelle)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NomInventaireStatut.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArticleFamille.Code)
+                @Html.DisplayFor(modelItem => item.ArticleFamille.Libelle)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

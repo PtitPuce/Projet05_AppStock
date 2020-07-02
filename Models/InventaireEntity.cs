@@ -18,7 +18,7 @@ namespace AppStock.Models
         [Column("article_famille_uid")]
         public int ArticleFamilleId { get; set; }
         [Column("inventaire_date_cloture")]
-        public DateTime DateCloture { get; set; }
+        public DateTime? DateCloture { get; set; }
     
         // soft delete
         [Column("is_deleted")]
