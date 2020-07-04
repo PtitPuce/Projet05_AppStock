@@ -17,10 +17,19 @@ namespace AppStock.Models
         [Required]
         public string Libelle { get; set; }
         [Column("tva_taux")]
+        [DisplayFormat(DataFormatString = "{0:#.##}", ApplyFormatInEditMode = true)]
         public decimal Taux { get; set; }
 
         // soft delete
         [Column("is_deleted")]
         public bool IsDeleted { get;set; } = false;
+
+        public string DisplayName
+        {
+            get
+            {
+                return this.Taux.ToString("0.##") + " %" + " (" +this.Libelle + ")";
+            }
+        }
     }
 }

@@ -41,6 +41,20 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
                                     .Include(o => o.InventaireLignes)
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
+
+        public async Task<InventaireEntity> GetOneByIdArticleFamilleAsync(int id)
+        {
+            return await _context.InventaireEntities
+                                    .Include(o => o.NomInventaireStatut)
+                                    .Include(o => o.User)
+                                    .Include(o => o.ArticleFamille)
+                                        .ThenInclude (o => o.Articles)
+                                            .ThenInclude(o => o.Stock)
+                                    .Include(o => o.InventaireLignes)
+                                    .Where(o => o.NomInventaireStatutId == 1)
+                                    .Where(o => o.IsDeleted == false)
+                                    .FirstOrDefaultAsync(m => m.ArticleFamilleId == id);
+        }
         
         public async Task<InventaireEntity> AddAsync(InventaireEntity item)
         {
@@ -67,7 +81,8 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
 
         public async Task<InventaireEntity> ValidateAsync(InventaireEntity item)
         {
-            item.NomInventaireStatutId = 2; // hardCode "VALIDEE"
+            item.NomInventaireStatutId = 2; // hardCode "TERMINE"
+            item.DateCloture = DateTime.UtcNow;
             _context.Update(item);
             await _context.SaveChangesAsync();
             return item;

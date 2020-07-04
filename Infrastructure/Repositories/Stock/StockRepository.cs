@@ -22,6 +22,7 @@ namespace AppStock.Infrastructure.Repositories.Stock
         {
             return await _context.StockEntities
                                     .Include(a => a.Article)
+                                        .ThenInclude(a => a.ArticleFamille)
                                     .ToListAsync()
                                     ;
         }
@@ -30,6 +31,7 @@ namespace AppStock.Infrastructure.Repositories.Stock
         {
             return await _context.StockEntities
                                     .Include(a => a.Article)
+                                        .ThenInclude(a => a.ArticleFamille)
                                     .FirstOrDefaultAsync(m => m.ArticleID == id)
                                     ;
         }

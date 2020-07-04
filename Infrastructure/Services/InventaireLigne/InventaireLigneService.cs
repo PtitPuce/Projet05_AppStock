@@ -20,11 +20,12 @@ namespace AppStock.Infrastructure.Services.InventaireLigne
             _service_article = service_article ?? throw new ArgumentNullException(nameof(IArticleService));
         }
 
-        public async Task<InventaireLigneEntity> AddArticle(InventaireEntity Inventaire, int id_article)
+        public async Task<InventaireLigneEntity> AddArticle(InventaireEntity inventaire, ArticleEntity article)
         {
             InventaireLigneEntity ligne = new InventaireLigneEntity();
-            ligne.Inventaire = Inventaire;
-            ligne.Article = await _service_article.GetOneById(id_article);
+            ligne.Inventaire = inventaire;
+            ligne.Article = article;
+            ligne.QuantiteTheorique = article.Stock.Quantite;
 
             return await _repository.AddAsync(ligne);
         }

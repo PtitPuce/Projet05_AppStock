@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,18 +18,23 @@ namespace AppStock.Models
         [Required]
         public string Libelle { get; set; }
         [Column("article_pu")]
+        [DisplayName("Prix unitaire")]
         public decimal PrixUnitaire { get; set; }
         [Column("article_famille_uid")]
+        [DisplayName("Famille")]
         public int? ArticleFamilleId { get; set; }
         [Column("article_tva_uid")]
         [Required(ErrorMessage="Dis donc !!!")]
+        [DisplayName("Taux de TVA")]
         public int NomTypeTVAId { get; set; }
         
         // soft delete
         [Column("is_deleted")]
         public bool IsDeleted { get;set; } = false;
 
+        [DisplayName("Famille")]
         public ArticleFamilleEntity ArticleFamille { get; set; }
+        [DisplayName("TVA")]
         public NomTypeTVAEntity NomTypeTVA { get; set; }
         public StockEntity Stock { get; set; }
     }

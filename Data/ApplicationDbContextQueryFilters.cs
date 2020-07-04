@@ -10,6 +10,7 @@ namespace AppStock.Data
             builder.Entity<ArticleFamilleEntity>().HasQueryFilter(e=>!e.IsDeleted);
             builder.Entity<NomTypeTVAEntity>().HasQueryFilter(e=>!e.IsDeleted);
             //builder.Entity<StockEntity>().HasQueryFilter(e=>!e.IsDeleted);
+            builder.Entity<InventaireEntity>().HasQueryFilter(e=>!e.IsDeleted);
         }
     }
 }

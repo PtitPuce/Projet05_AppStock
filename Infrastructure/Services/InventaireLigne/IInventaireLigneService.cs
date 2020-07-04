@@ -9,7 +9,7 @@ namespace AppStock.Infrastructure.Services.InventaireLigne
         #pragma warning disable 1591
         Task<IEnumerable<InventaireLigneEntity>> GetAll();
         Task<InventaireLigneEntity> GetOneById(int id);
-        Task<InventaireLigneEntity> AddArticle(InventaireEntity Inventaire, int id_article);
+        Task<InventaireLigneEntity> AddArticle(InventaireEntity inventaire, ArticleEntity article);
         Task<InventaireLigneEntity> Update(InventaireLigneEntity item);
         Task DeleteById(int id);
         bool Exist(int id);

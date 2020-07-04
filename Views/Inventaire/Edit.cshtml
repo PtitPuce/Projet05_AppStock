@@ -4,56 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>InventaireEntity</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NomInventaireStatutId" class="control-label"></label>
-                <select asp-for="NomInventaireStatutId" class="form-control" asp-items="ViewBag.NomInventaireStatutId"></select>
-                <span asp-validation-for="NomInventaireStatutId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArticleFamilleId" class="control-label"></label>
-                <select asp-for="ArticleFamilleId" class="form-control" asp-items="ViewBag.ArticleFamilleId"></select>
-                <span asp-validation-for="ArticleFamilleId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateCloture" class="control-label"></label>
-                <input asp-for="DateCloture" class="form-control" />
-                <span asp-validation-for="DateCloture" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedAt" class="control-label"></label>
-                <input asp-for="UpdatedAt" class="form-control" />
-                <span asp-validation-for="UpdatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<h1>Saisie de l'inventaire pour la famille d'article : @Model.ArticleFamille.Libelle</h1>
 
 <div>
     @if(Model.ArticleFamille.Articles.Count == 0)
@@ -62,23 +13,36 @@
     }
     else
     {
-        @foreach (ArticleEntity article in Model.ArticleFamille.Articles)
+        @foreach (InventaireLigneEntity ligne in Model.InventaireLignes)
         {
             <table>
-                <td>@article.Libelle</td>
+                <td>@ligne.Article.Libelle | </td>
+                <td>Quantité en stock (théorique) : @ligne.QuantiteTheorique | </td>
                 <td>
-                    Stock théorique : @article.Stock.Quantite
+                    
+                    <form asp-action="UpdateLigneQuantiteComptee" method="POST">
+                        Quantité comptée (réelle)
+                        <input type="hidden" asp-for="@ligne.Id" name="ligne_Id">
+                        <div class="form-group">
+                            <input asp-for="@ligne.QuantiteComptee" name="ligne_Quantite_Comptee" class="form-control" />
+                            <span asp-validation-for="@ligne.QuantiteComptee" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                        </div>
+                    </form>
                 </td>
-            </table>    
+            </table>
         }
     }
 </div>
 
-
-
+<div>
+    <a asp-action="ValiderInventaire" asp-route-id="@Model.Id">Valider l'inventaire</a>
+</div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Retour</a>
 </div>
 
 @section Scripts {

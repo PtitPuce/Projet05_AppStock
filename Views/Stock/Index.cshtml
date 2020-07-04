@@ -3,38 +3,46 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Articles en stock</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Création</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Quantite)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Article)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article.ArticleFamille)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantite)
+            </th>
+            @*
             <th>Deleted ?</th>
             <th></th>
+            *@
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Article.Libelle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Article.ArticleFamille.Libelle)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Quantite)
             </td>
+            @*<td>@item.IsDeleted</td>*@
             <td>
-                @Html.DisplayFor(modelItem => item.Article.Code)
-            </td>
-            <td>@item.IsDeleted</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ArticleID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ArticleID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ArticleID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.ArticleID">Modifier</a> |
+                <a asp-action="Details" asp-route-id="@item.ArticleID">Détails</a> |
+                <a asp-action="Delete" asp-route-id="@item.ArticleID">Supprimer</a>
             </td>
         </tr>
 }

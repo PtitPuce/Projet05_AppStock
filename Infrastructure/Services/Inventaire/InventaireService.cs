@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Linq;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
@@ -25,6 +28,13 @@ namespace AppStock.Infrastructure.Services.Inventaire
 
         public async Task<InventaireEntity> Add(InventaireEntity item)
         {
+            // On vérifie qu'il n'y ai pas d'inventaire en cours sur la même famille
+            var inventaire_en_cours = await _repository.GetOneByIdArticleFamilleAsync(item.ArticleFamilleId);
+            if (inventaire_en_cours != null)
+            {
+                throw new NotImplementedException();
+            }
+
             return await _repository.AddAsync(item);
         }
 
@@ -42,6 +52,23 @@ namespace AppStock.Infrastructure.Services.Inventaire
         public async Task<IEnumerable<InventaireEntity>> GetAll()
         {
             return await _repository.GetAllAsync();
+        }
+
+        public async Task<InventaireEntity> GetOneByIdWithLignes(int id)
+        {
+            InventaireEntity inventaire = await _repository.GetOneByIdAsync(id);
+            // 1. On vérifie le flag de l'inventaire
+            // 2. Si le flag est "En cours" et sans ligne alors on ajoute les articles de la famille d'article et leur stock en base dans la ligne de l'inventaire
+            if ((inventaire.NomInventaireStatutId == 1) && (inventaire.InventaireLignes.Count == 0)) // hardCode "En cours"
+            {
+                foreach (ArticleEntity a in inventaire.ArticleFamille.Articles)
+                {
+                    await _service_ligne.AddArticle(inventaire, a);
+                }
+                // Récupération de l'inventaire avec les lignes
+                inventaire = await _repository.GetOneByIdAsync(id);
+            }   
+            return inventaire;
         }
 
         public async Task<InventaireEntity> GetOneById(int id)
@@ -67,11 +94,24 @@ namespace AppStock.Infrastructure.Services.Inventaire
             foreach (InventaireLigneEntity l in item.InventaireLignes)
             {
                 StockEntity s = await _service_stock.GetOneById(l.ArticleId);
-                //s.Quantite = s.Quantite - l.Quantite;
+                s.Quantite = l.QuantiteComptee;
                 await _service_stock.Update(s);
             }
 
             return await _repository.ValidateAsync(item);
+        }
+
+        public bool isEditable(InventaireEntity item)
+        {
+            if (item.NomInventaireStatut.Code == "E")
+            {
+                return true; 
+            }
+            else
+            {
+                return false;
+            }
+            
         }
 
         public bool Exist(int id){

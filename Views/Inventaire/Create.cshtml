@@ -4,16 +4,15 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Création</h1>
 
-<h4>InventaireEntity</h4>
+<h4>Sélection de la famille d'articles</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ArticleFamilleId" class="control-label"></label>
                 <select asp-for="ArticleFamilleId" class ="form-control" asp-items="ViewBag.ArticleFamilleId"></select>
             </div>
             <div class="form-group">
@@ -24,7 +23,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Retour</a>
 </div>
 
 @section Scripts {

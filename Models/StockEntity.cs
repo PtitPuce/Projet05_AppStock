@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,7 @@ namespace AppStock.Models
     {
         [Key]
         [Column("article_uid")]
+        [DisplayName("Article")]
         public int ArticleID { get; set; }
         [Column("stock_quantite")]
         public int Quantite { get; set; }

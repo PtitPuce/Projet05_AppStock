@@ -23,6 +23,7 @@ namespace AppStock.Controllers
         private readonly IInventaireLigneService _service_inventaire_ligne;
         private readonly IStockService _service_stock;
         private readonly IArticleFamilleService _service_article_famille;
+        public SelectList ArticleFamillesWithStockSL { get; set; } // Liste des familles d'articles qui dont tous les articles ont du stock
         public InventaireController( ApplicationDbContext context
                             , UserManager<IdentityUser> user_manager 
                             , IInventaireService service_inventaire 
@@ -44,30 +45,43 @@ namespace AppStock.Controllers
             return View(await _service_inventaire.GetAll());
         }
 
-        // GET: Inventaire/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpPost]
+        public async Task<IActionResult> UpdateLigneQuantiteComptee(int ligne_quantite_comptee, int ligne_Id)
         {
-            if (id == null)
+            InventaireLigneEntity ligne = await _service_inventaire_ligne.GetOneById(ligne_Id);
+            ligne.QuantiteComptee = ligne_quantite_comptee;
+
+            await _service_inventaire_ligne.Update(ligne);
+
+            return RedirectToAction("Edit", new { id = ligne.InventaireId });
+        }
+
+        public async Task<IActionResult> ValiderInventaire(int id)
+        {
+            var inventaire = await _service_inventaire.GetOneByIdWithLignes(id);
+            await _service_inventaire.Validate(inventaire);
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // GET: Inventaire/Details/5
+        public async Task<IActionResult> Details(int id)
+        {
+            var item = await _service_inventaire.GetOneByIdWithLignes(id);
+            if (item == null)
             {
                 return NotFound();
             }
 
-            var inventaireEntity = await _context.InventaireEntities
-                .Include(i => i.ArticleFamille)
-                .Include(i => i.NomInventaireStatut)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (inventaireEntity == null)
-            {
-                return NotFound();
-            }
-
-            return View(inventaireEntity);
+            return View(item);
         }
 
         // GET: Inventaire/Create
         public IActionResult Create()
         {
-            ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code");
+            PopulateArticleFamillesWithStockDropDownList();
+            //ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Libelle");
+            ViewData["ArticleFamilleId"] = ArticleFamillesWithStockSL;
             return View();
         }
 
@@ -94,69 +108,32 @@ namespace AppStock.Controllers
         // GET: Inventaire/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var inventaireEntity = await _service_inventaire.GetOneById(id);
+            var inventaireEntity = await _service_inventaire.GetOneByIdWithLignes(id);
             if (inventaireEntity == null)
             {
                 return NotFound();
             }
-            return View(inventaireEntity);
-        }
-
-        // POST: Inventaire/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,NomInventaireStatutId,ArticleFamilleId,DateCloture,IsDeleted,CreatedAt,UpdatedAt")] InventaireEntity inventaireEntity)
-        {
-            if (id != inventaireEntity.Id)
+            if (!_service_inventaire.isEditable(inventaireEntity))
             {
-                return NotFound();
+                throw new NotImplementedException();
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(inventaireEntity);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InventaireEntityExists(inventaireEntity.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", inventaireEntity.ArticleFamilleId);
-            ViewData["NomInventaireStatutId"] = new SelectList(_context.NomInventaireStatutEntities, "Id", "Code", inventaireEntity.NomInventaireStatutId);
             return View(inventaireEntity);
         }
 
         // GET: Inventaire/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
+            var item = await _service_inventaire.GetOneById(id);
+            if (item == null)
             {
                 return NotFound();
             }
-
-            var inventaireEntity = await _context.InventaireEntities
-                .Include(i => i.ArticleFamille)
-                .Include(i => i.NomInventaireStatut)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (inventaireEntity == null)
+            if (!_service_inventaire.isEditable(item))
             {
-                return NotFound();
+                throw new NotImplementedException();
             }
 
-            return View(inventaireEntity);
+            return View(item);
         }
 
         // POST: Inventaire/Delete/5
@@ -164,15 +141,26 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var inventaireEntity = await _context.InventaireEntities.FindAsync(id);
-            _context.InventaireEntities.Remove(inventaireEntity);
-            await _context.SaveChangesAsync();
+            await _service_inventaire.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool InventaireEntityExists(int id)
         {
             return _context.InventaireEntities.Any(e => e.Id == id);
+        }
+
+        // Renvoie la liste des familles qui ont des articles en stock
+        public void PopulateArticleFamillesWithStockDropDownList(object selectedArticleFamille = null)
+        {
+            var articleFamilleQuery = _context.ArticleFamilleEntities
+                                .Include(o => o.Articles)
+                                    .ThenInclude(o => o.Stock)
+                                .Where(o=> o.Articles.Any(i => i.Stock != null))
+                                .OrderBy(z=> z.Libelle);
+
+            ArticleFamillesWithStockSL = new SelectList(articleFamilleQuery.AsNoTracking(),
+                        "Id", "Libelle", selectedArticleFamille);
         }
     }
 }

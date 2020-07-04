@@ -10,6 +10,7 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
         
         Task<IEnumerable<InventaireEntity>> GetAllAsync();
         Task<InventaireEntity> GetOneByIdAsync(int id);
+        Task<InventaireEntity> GetOneByIdArticleFamilleAsync(int id);
         Task<InventaireEntity> AddAsync(InventaireEntity item);
         Task<InventaireEntity> UpdateAsync(InventaireEntity item);
         Task<InventaireEntity> DeleteAsync(InventaireEntity item);
