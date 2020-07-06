@@ -58,7 +58,7 @@ namespace AppStock.Controllers
         // GET: Commande
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CommandeEntities.Include(c => c.Contact).Include(c => c.NomCommandeStatut).Include(c => c.NomCommandeType);
+            var applicationDbContext = _context.CommandeEntities.Include(c => c.Contact).Include(c => c.NomCommandeStatut);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -149,7 +149,6 @@ namespace AppStock.Controllers
             var commandeEntity = await _context.CommandeEntities
                 .Include(c => c.Contact)
                 .Include(c => c.NomCommandeStatut)
-                .Include(c => c.NomCommandeType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (commandeEntity == null)
             {
@@ -164,7 +163,6 @@ namespace AppStock.Controllers
         {
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id");
             ViewData["NomCommandeStatutId"] = new SelectList(_context.NomCommandeStatutEntities, "Id", "Code");
-            ViewData["NomCommandeTypeId"] = new SelectList(_context.NomCommandeTypeEntities, "Id", "Code");
             return View();
         }
 
@@ -173,7 +171,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Numero,Commentaire,ContactId,NomCommandeStatutId,NomCommandeTypeId,IsDeleted")] CommandeEntity commandeEntity)
+        public async Task<IActionResult> Create([Bind("Id,Numero,Commentaire,ContactId,NomCommandeStatutId,IsDeleted")] CommandeEntity commandeEntity)
         {
             if (ModelState.IsValid)
             {
@@ -183,7 +181,6 @@ namespace AppStock.Controllers
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeEntity.ContactId);
             ViewData["NomCommandeStatutId"] = new SelectList(_context.NomCommandeStatutEntities, "Id", "Code", commandeEntity.NomCommandeStatutId);
-            ViewData["NomCommandeTypeId"] = new SelectList(_context.NomCommandeTypeEntities, "Id", "Code", commandeEntity.NomCommandeTypeId);
             return View(commandeEntity);
         }
 
@@ -202,7 +199,6 @@ namespace AppStock.Controllers
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeEntity.ContactId);
             ViewData["NomCommandeStatutId"] = new SelectList(_context.NomCommandeStatutEntities, "Id", "Code", commandeEntity.NomCommandeStatutId);
-            ViewData["NomCommandeTypeId"] = new SelectList(_context.NomCommandeTypeEntities, "Id", "Code", commandeEntity.NomCommandeTypeId);
             return View(commandeEntity);
         }
 
@@ -211,7 +207,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Numero,Commentaire,ContactId,NomCommandeStatutId,NomCommandeTypeId,IsDeleted,CreatedAt")] CommandeEntity commandeEntity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Numero,Commentaire,ContactId,NomCommandeStatutId,IsDeleted,CreatedAt")] CommandeEntity commandeEntity)
         {
             if (id != commandeEntity.Id)
             {
@@ -240,7 +236,6 @@ namespace AppStock.Controllers
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeEntity.ContactId);
             ViewData["NomCommandeStatutId"] = new SelectList(_context.NomCommandeStatutEntities, "Id", "Code", commandeEntity.NomCommandeStatutId);
-            ViewData["NomCommandeTypeId"] = new SelectList(_context.NomCommandeTypeEntities, "Id", "Code", commandeEntity.NomCommandeTypeId);
             return View(commandeEntity);
         }
 
@@ -255,7 +250,6 @@ namespace AppStock.Controllers
             var commandeEntity = await _context.CommandeEntities
                 .Include(c => c.Contact)
                 .Include(c => c.NomCommandeStatut)
-                .Include(c => c.NomCommandeType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (commandeEntity == null)
             {

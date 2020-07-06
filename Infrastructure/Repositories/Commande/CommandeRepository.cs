@@ -24,7 +24,6 @@ namespace AppStock.Infrastructure.Repositories.Commande
                                     .Include(o => o.Contact)
                                         .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeStatut)
-                                    .Include(o => o.NomCommandeType)
                                     .Include(o => o.CommandeLignes)
                                         .ThenInclude(o => o.Article)
                                             .ThenInclude(o => o.NomTypeTVA)
@@ -37,7 +36,6 @@ namespace AppStock.Infrastructure.Repositories.Commande
                                     .Include(o => o.Contact)
                                         .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeStatut)
-                                    .Include(o => o.NomCommandeType)
                                     .Include(o => o.CommandeLignes)
                                         .ThenInclude(o => o.Article)
                                             .ThenInclude(o => o.NomTypeTVA)
@@ -56,7 +54,6 @@ namespace AppStock.Infrastructure.Repositories.Commande
                 CommandeEntity _commande = new CommandeEntity();
                 _commande.ContactId = id;
                 _commande.NomCommandeStatutId = 1; // hardCode "PANIER"
-                _commande.NomCommandeTypeId = 2; // hardCode "CLIENT"
                 
                 await AddAsync(_commande);
                 return await GetOneByIdAsync(_commande.Id);

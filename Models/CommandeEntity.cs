@@ -19,8 +19,6 @@ namespace AppStock.Models
         public int ContactId { get; set; }
         [Column("commande_statut_uid")]
         public int NomCommandeStatutId { get; set; }
-        [Column("commande_type_uid")]
-        public int NomCommandeTypeId { get; set; }
         [Column("commande_adresse_uid")]
         public int? AdresseId { get; set; }
         
@@ -36,7 +34,6 @@ namespace AppStock.Models
 
         public ContactEntity Contact { get;set; }
         public NomCommandeStatutEntity NomCommandeStatut { get;set; }
-        public NomCommandeTypeEntity NomCommandeType { get;set; }
         public AdresseEntity Adresse { get; set; }
         public ICollection<CommandeLigneEntity> CommandeLignes { get; set; }
     }

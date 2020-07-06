@@ -12,12 +12,9 @@ namespace AppStock.Models.DTO
 
         public int ContactId { get; set; }
         public int NomCommandeStatutId { get; set; }
-        public int NomCommandeTypeId { get; set; }
-
         
         public ContactEntity Contact {get;set;}
         public NomCommandeStatutEntity NomCommandeStatut {get;set;}
-        public NomCommandeTypeEntity NomCommandeType {get;set;}
 
         public ICollection<CommandeLigneEntity> CommandeLignes {get;set;}
         
