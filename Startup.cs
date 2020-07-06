@@ -26,6 +26,8 @@ using AppStock.Infrastructure.Services.Commande;
 using AppStock.Infrastructure.Services.CommandeLigne;
 using AppStock.Infrastructure.Services.Inventaire;
 using AppStock.Infrastructure.Services.InventaireLigne;
+using AppStock.Infrastructure.Services.CommandeFournisseur;
+using AppStock.Infrastructure.Services.CommandeFournisseurLigne;
 
 using AppStock.Infrastructure.Repositories.Article;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
@@ -37,6 +39,8 @@ using AppStock.Infrastructure.Repositories.Commande;
 using AppStock.Infrastructure.Repositories.CommandeLigne;
 using AppStock.Infrastructure.Repositories.Inventaire;
 using AppStock.Infrastructure.Repositories.InventaireLigne;
+using AppStock.Infrastructure.Repositories.CommandeFournisseur;
+using AppStock.Infrastructure.Repositories.CommandeFournisseurLigne;
 
 using AutoMapper;
 
@@ -96,6 +100,8 @@ namespace AppStock
             services.AddTransient<ICommandeLigneService, CommandeLigneService>();
             services.AddTransient<IInventaireService, InventaireService>();
             services.AddTransient<IInventaireLigneService, InventaireLigneService>();
+            services.AddTransient<ICommandeFournisseurService, CommandeFournisseurService>();
+            services.AddTransient<ICommandeFournisseurLigneService, CommandeFournisseurLigneService>();
 
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
@@ -108,6 +114,8 @@ namespace AppStock
             services.AddTransient<ICommandeLigneRepository, CommandeLigneRepository>();
             services.AddTransient<IInventaireRepository, InventaireRepository>();
             services.AddTransient<IInventaireLigneRepository, InventaireLigneRepository>();
+            services.AddTransient<ICommandeFournisseurRepository, CommandeFournisseurRepository>();
+            services.AddTransient<ICommandeFournisseurLigneRepository, CommandeFournisseurLigneRepository>();
             
         }
 
