@@ -29,6 +29,7 @@ namespace AppStock.Data
         public DbSet<NomCommandeStatutEntity> NomCommandeStatutEntities { get; set; } 
         public DbSet<NomCommandeTypeEntity> NomCommandeTypeEntities { get; set; }   
         public DbSet<CommandeLigneEntity> CommandeClientLigneEntities { get; set; }  
+        public DbSet<FournisseurEntity> FournisseurEntities { get; set; }  
 
         protected override void OnModelCreating(ModelBuilder builder){
             base.OnModelCreating(builder);
