@@ -3,14 +3,16 @@ using System;
 using AppStock.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AppStock.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200706143940_SuppressionTypeCommande")]
+    partial class SuppressionTypeCommande
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -469,6 +471,28 @@ namespace AppStock.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("app_nom_commande_statut");
+                });
+
+            modelBuilder.Entity("AppStock.Models.NomCommandeTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("commande_type_uid")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnName("commande_type_code")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Libelle")
+                        .IsRequired()
+                        .HasColumnName("commande_type_libelle")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("app_nom_commande_type");
                 });
 
             modelBuilder.Entity("AppStock.Models.NomInventaireStatutEntity", b =>

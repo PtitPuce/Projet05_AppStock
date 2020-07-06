@@ -20,8 +20,6 @@ namespace AppStock.Models
         public int FournisseurId { get; set; }
         [Column("commande_fournisseur_statut_uid")]
         public int NomCommandeFournisseurStatutId { get; set; }
-        [Column("commande_fournisseur_type_uid")]
-        public int NomCommandeFournisseurTypeId { get; set; }
         
         // soft delete
         [Column("is_deleted")]

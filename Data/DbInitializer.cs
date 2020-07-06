@@ -45,22 +45,6 @@ namespace AppStock.Data
                 context.SaveChanges();
             }
 
-            // Seed types de commande
-            if (!context.NomCommandeTypeEntities.Any())
-            {
-                var commande_type = new NomCommandeTypeEntity[]
-                {
-                    new NomCommandeTypeEntity { Code = "C",   Libelle = "Client" },
-                    new NomCommandeTypeEntity { Code = "F",   Libelle = "Fournisseur" }
-                };
-
-                foreach (NomCommandeTypeEntity s in commande_type)
-                {
-                    context.NomCommandeTypeEntities.Add(s);
-                }
-                context.SaveChanges();
-            }
-
             // ARTICLE FAMILLE
             if (!context.ArticleFamilleEntities.Any())
             {
