@@ -13,7 +13,7 @@ namespace AppStock.Infrastructure.Repositories.Stock
         Task<StockEntity> AddAsync(StockEntity item);
         Task<StockEntity> UpdateAsync(StockEntity item);
         Task<StockEntity> DeleteAsync(StockEntity item);
-        bool Exist(int id);
+        bool ExistForArticleId(int id);
 
         #pragma warning restore 1591
     }

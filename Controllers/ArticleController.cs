@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
 using AppStock.Infrastructure.Services.Article;
+using AppStock.Infrastructure.Services.Stock;
 using System.Runtime.Serialization;
 
 namespace AppStock.Controllers
@@ -15,13 +16,15 @@ namespace AppStock.Controllers
     public class ArticleController : Controller
     {
         private readonly IArticleService _service;
+        private readonly IStockService _service_stock;
 
         private readonly ApplicationDbContext _context;
 
-        public ArticleController(IArticleService service, ApplicationDbContext context)
+        public ArticleController(IArticleService service, IStockService service_stock, ApplicationDbContext context)
         {
             _context = context;
             _service = service;
+            _service_stock = service_stock;
         }
 
         // GET: Article
@@ -55,6 +58,7 @@ namespace AppStock.Controllers
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
+            ViewData["FournisseurID"] = new SelectList(_context.FournisseurEntities, "Id", "Raison");
             ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code");
             ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code");
             return View();
@@ -65,17 +69,20 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Libelle,PrixUnitaire,ArticleFamilleID,NomTypeTVAID")] ArticleEntity article)
+        public async Task<IActionResult> Create([Bind("Id,Code,Libelle,PrixUnitaire,FournisseurId,ArticleFamilleId,NomTypeTVAId,Threshold")] ArticleEntity article)
         {
             if (ModelState.IsValid)
             {
                 var item = await _service.Add(article);
+                // init STOCK par defaut(quantite==threshold)
+                await _service_stock.InitStockForArticle(article);
                 return RedirectToAction(nameof(Index));
             }
 
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
+            ViewData["FournisseurID"] = new SelectList(_context.FournisseurEntities, "Id", "Raison", article.FournisseurId);
             ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleId);
             ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAId);
             return View(article);
@@ -93,6 +100,7 @@ namespace AppStock.Controllers
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
+            ViewData["FournisseurID"] = new SelectList(_context.FournisseurEntities, "Id", "Raison", article.FournisseurId);
             ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleId);
             ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAId);
             return View(article);
@@ -103,7 +111,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle,PrixUnitaire,ArticleFamilleID,NomTypeTVAID")] ArticleEntity article)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Libelle,PrixUnitaire,FournisseurId,ArticleFamilleId,NomTypeTVAId,Threshold")] ArticleEntity article)
         {
             if (id != article.Id)
             {
@@ -133,6 +141,7 @@ namespace AppStock.Controllers
             /**
                 A FAIRE :: preparer et utiliser les services manquants
             **/
+            ViewData["FournisseurID"] = new SelectList(_context.FournisseurEntities, "Id", "Raison", article.FournisseurId);
             ViewData["ArticleFamilleID"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", article.ArticleFamilleId);
             ViewData["NomTypeTVAID"] = new SelectList(_context.NomTypeTVAEntities, "Id", "Code", article.NomTypeTVAId);
             return View(article);

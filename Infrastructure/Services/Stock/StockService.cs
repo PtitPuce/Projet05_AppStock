@@ -23,6 +23,19 @@ namespace AppStock.Infrastructure.Services.Stock
             return await _repository.AddAsync(item);
         }
 
+        public async Task InitStockForArticle(ArticleEntity article)
+        {
+            if(!_repository.ExistForArticleId(article.Id))
+            {
+                var stock = new StockEntity();
+                stock.ArticleID = article.Id;
+                stock.Quantite = 0;
+
+                await Add(stock);
+            }
+        }
+
+
         public async Task DeleteById(int id)
         {
             var item = await _repository.GetOneByIdAsync(id);
@@ -46,14 +59,14 @@ namespace AppStock.Infrastructure.Services.Stock
 
         public async Task<StockEntity> Update(StockEntity item)
         {
-            if(!_repository.Exist(item.ArticleID)){
+            if(!_repository.ExistForArticleId(item.ArticleID)){
                 throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
             }
             return await _repository.UpdateAsync(item);
         }
 
         public bool Exist(int id){
-            return _repository.Exist(id);
+            return _repository.ExistForArticleId(id);
         }
 
         public bool IsStable(StockEntity item)

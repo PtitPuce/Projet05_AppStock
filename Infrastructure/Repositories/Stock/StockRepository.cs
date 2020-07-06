@@ -59,7 +59,7 @@ namespace AppStock.Infrastructure.Repositories.Stock
         }
         
 
-        public bool Exist(int id)
+        public bool ExistForArticleId(int id)
         {
             return _context.StockEntities.Any(i => i.ArticleID == id);
         }

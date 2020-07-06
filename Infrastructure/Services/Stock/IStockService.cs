@@ -12,6 +12,7 @@ namespace AppStock.Infrastructure.Services.Stock
         Task<StockEntity> Add(StockEntity item);
         Task<StockEntity> Update(StockEntity item);
         Task DeleteById(int id);
+        Task InitStockForArticle(ArticleEntity article);
         bool Exist(int id);
         bool IsStable(StockEntity item);
         

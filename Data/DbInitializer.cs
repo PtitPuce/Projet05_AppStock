@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -131,7 +132,6 @@ namespace AppStock.Data
                                             Email="contact@boiseries-co.fr",
                                             AdresseId=  id_adresse_B
                                         },
-                    
                 };
 
                 foreach (FournisseurEntity s in fournisseurs)
@@ -144,25 +144,34 @@ namespace AppStock.Data
             // ARTICLES
             if (!context.ArticleEntities.Any())
             {
+                var id_fournisseur_A = context.FournisseurEntities.Where(f => f.Raison == "Meubles SARL").First().Id;
+                var id_fournisseur_B = context.FournisseurEntities.Where(f => f.Raison == "Boiserie and Co.").First().Id;
+
                 var articles = new ArticleEntity[]
                 {
                     new ArticleEntity { Code = "CHA",
                                         Libelle = "Chaise",
                                         PrixUnitaire = 20,
+                                        Threshold = 10,
                                         ArticleFamilleId = context.ArticleFamilleEntities.Where(f => f.Code == "MOB").First().Id,
-                                        NomTypeTVAId = context.NomTypeTVAEntities.Where(f => f.Code == "VINGT").First().Id
+                                        NomTypeTVAId = context.NomTypeTVAEntities.Where(f => f.Code == "VINGT").First().Id,
+                                        FournisseurId = id_fournisseur_A
                                         },
                     new ArticleEntity { Code = "TAB",
                                         Libelle = "Table",
                                         PrixUnitaire = 150,
+                                        Threshold = 5,
                                         ArticleFamilleId = context.ArticleFamilleEntities.Where(f => f.Code == "MOB").First().Id,
-                                        NomTypeTVAId = context.NomTypeTVAEntities.Where(f => f.Code == "DOUZE").First().Id
+                                        NomTypeTVAId = context.NomTypeTVAEntities.Where(f => f.Code == "DOUZE").First().Id,
+                                        FournisseurId = id_fournisseur_B
                                         },
                     new ArticleEntity { Code = "LUX",
                                         Libelle = "Lampe",
                                         PrixUnitaire = 12.5M,
+                                        Threshold = 30,
                                         ArticleFamilleId = context.ArticleFamilleEntities.Where(f => f.Code == "DECO").First().Id,
-                                        NomTypeTVAId = context.NomTypeTVAEntities.Where(f => f.Code == "ZERO").First().Id
+                                        NomTypeTVAId = context.NomTypeTVAEntities.Where(f => f.Code == "ZERO").First().Id,
+                                        FournisseurId = id_fournisseur_A
                                         },
                     
                 };
@@ -171,6 +180,28 @@ namespace AppStock.Data
                 {
                     context.ArticleEntities.Add(s);
                 }
+                context.SaveChanges();
+            }
+
+            // STOCK
+            List<StockEntity> stocks = new List<StockEntity>();
+            foreach(var article in context.ArticleEntities)
+            {
+                if( !context.StockEntities.Where(w => w.ArticleID == article.Id).Any() )
+                {
+                    var stock = new StockEntity();
+                    stock.ArticleID = article.Id;
+                    stock.Quantite = article.Threshold;
+                    
+                    stocks.Add(stock);
+                }
+            }
+            foreach(var item in stocks)
+            {
+                context.StockEntities.Add(item);
+            }
+            if( stocks.Any() )
+            {
                 context.SaveChanges();
             }
 
