@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Index";
 }
+@inject AppStock.Infrastructure.Services.Commande.ICommandeService Service
 
 <h1>Articles en stock</h1>
 
@@ -20,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Quantite)
             </th>
+            <th>
+                Charge totale
+            </th>
             @*
             <th>Deleted ?</th>
             <th></th>
@@ -37,6 +41,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantite)
+            </td>
+            <td>
+                @Service.getTotalPendingArticles(item.ArticleID)
             </td>
             @*<td>@item.IsDeleted</td>*@
             <td>

@@ -96,5 +96,12 @@ namespace AppStock.Infrastructure.Services.Commande
             return await _service_ligne.AddArticle(commande, id_article);
 
         }
+
+        // Quantite totale d'article en tension (representent une charge pour le stock)
+        public int getTotalPendingArticles(int id_article)
+        {   
+            int total = _repository.getTotalPendingArticles(id_article);
+            return total;
+        }
     }
 }

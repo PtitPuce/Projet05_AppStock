@@ -19,6 +19,7 @@ namespace AppStock.Infrastructure.Services.Commande
 
         // ARTICLES
         Task<CommandeLigneEntity> AddArticle(CommandeEntity commande, int id_article);
+        int getTotalPendingArticles(int id_article);
 
         
 

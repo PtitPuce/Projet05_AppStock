@@ -102,5 +102,19 @@ namespace AppStock.Infrastructure.Repositories.Commande
             return _context.CommandeEntities.Any(i => i.Id == id);
         }
 
+        public int getTotalPendingArticles(int id_article)
+        {
+            var _total = 0;
+
+            _total = _context.CommandeClientLigneEntities
+                        .Include(o => o.Commande)
+                            .ThenInclude(o => o.NomCommandeStatut)
+                        .Where(o => o.Commande.NomCommandeStatut.Code == "A") // A == En attente (post-panier)
+                        .Where(o => o.ArticleId == id_article)
+                        .Sum(o => o.Quantite)
+                        ;
+
+            return _total;
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
         Task<CommandeEntity> DeleteAsync(CommandeEntity item);
         Task<CommandeEntity> ValidateAsync(CommandeEntity item);
         bool Exist(int id);
-
+        int getTotalPendingArticles(int id_article);
 
 
         #pragma warning restore 1591    
