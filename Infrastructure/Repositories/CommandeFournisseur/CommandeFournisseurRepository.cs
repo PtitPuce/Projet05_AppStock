@@ -21,6 +21,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         public async Task<IEnumerable<CommandeFournisseurEntity>> GetAllAsync()
         {
             return await _context.CommandeFournisseurEntities
+                                    .Include(o => o.Fournisseur)
                                     .Include(o => o.Contact)
                                         .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeFournisseurStatut)
@@ -33,6 +34,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         public async Task<CommandeFournisseurEntity> GetOneByIdAsync(int id)
         {
             return await _context.CommandeFournisseurEntities
+                                    .Include(o => o.Fournisseur)
                                     .Include(o => o.Contact)
                                         .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeFournisseurStatut)

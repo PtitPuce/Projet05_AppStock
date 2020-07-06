@@ -29,6 +29,24 @@ namespace AppStock.Data
                 context.SaveChanges();
             }
 
+            // Seed statuts de commande fournisseur
+            if (!context.NomCommandeFournisseurStatutEntities.Any())
+            {
+                var commande_fournisseur_status = new NomCommandeFournisseurStatutEntity[]
+                {
+                    new NomCommandeFournisseurStatutEntity { Code = "C",   Libelle = "Création" },
+                    new NomCommandeFournisseurStatutEntity { Code = "T",   Libelle = "Transmise au fournisseur" },
+                    new NomCommandeFournisseurStatutEntity { Code = "R",   Libelle = "Réceptionnée" },
+                    new NomCommandeFournisseurStatutEntity { Code = "A",   Libelle = "Annulation" }
+                };
+
+                foreach (NomCommandeFournisseurStatutEntity s in commande_fournisseur_status)
+                {
+                    context.NomCommandeFournisseurStatutEntities.Add(s);
+                }
+                context.SaveChanges();
+            }
+
             // Seed statuts des inventaires
             if (!context.NomInventaireStatutEntities.Any())
             {

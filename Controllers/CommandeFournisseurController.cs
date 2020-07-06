@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,23 +5,50 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppStock.Data;
 using AppStock.Models;
+using AppStock.Models.DTO;
+using AppStock.Infrastructure.Services.Article;
+using AppStock.Infrastructure.Services.CommandeFournisseur;
+using AppStock.Infrastructure.Services.CommandeFournisseurLigne;
+using AppStock.Infrastructure.Services.Contact;
+using AppStock.Infrastructure.Services.Stock;
+using Microsoft.AspNetCore.Identity;
 
 namespace AppStock.Controllers
 {
     public class CommandeFournisseurController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _user_manager; 
+        private readonly IArticleService _service_article;
+        private readonly ICommandeFournisseurService _service_commande_fournisseur;
+        private readonly ICommandeFournisseurLigneService _service_commande_fournisseur_ligne;
+        private readonly IContactService _service_contact;
+        private readonly IStockService _service_stock;
 
-        public CommandeFournisseurController(ApplicationDbContext context)
+        public CommandeFournisseurController(
+                            ApplicationDbContext context
+                            , UserManager<IdentityUser> user_manager 
+                            , IArticleService service_article 
+                            , ICommandeFournisseurService service_commande_fournisseur 
+                            , ICommandeFournisseurLigneService service_commande_fournisseur_ligne
+                            , IContactService service_contact 
+                            , IStockService service_stock)
         {
             _context = context;
+            _user_manager = user_manager;
+            _service_article = service_article ;
+            _service_commande_fournisseur = service_commande_fournisseur ;
+            _service_commande_fournisseur_ligne = service_commande_fournisseur_ligne;
+            _service_contact = service_contact ;
+            _service_stock = service_stock ;
         }
 
         // GET: CommandeFournisseur
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.CommandeFournisseurEntities.Include(c => c.Contact).Include(c => c.Fournisseur).Include(c => c.NomCommandeFournisseurStatut);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.CommandeFournisseurEntities.Include(c => c.Contact).Include(c => c.Fournisseur).Include(c => c.NomCommandeFournisseurStatut);
+            //return View(await applicationDbContext.ToListAsync());
+            return View(await _service_commande_fournisseur.GetAll());
         }
 
         // GET: CommandeFournisseur/Details/5
@@ -50,9 +75,9 @@ namespace AppStock.Controllers
         // GET: CommandeFournisseur/Create
         public IActionResult Create()
         {
-            ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id");
-            ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id");
-            ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Code");
+            //ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id");
+            ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Raison");
+            //ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Id");
             return View();
         }
 
@@ -61,13 +86,16 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Numero,Commentaire,ContactId,FournisseurId,NomCommandeFournisseurStatutId,NomCommandeFournisseurTypeId,IsDeleted,CreatedAt,UpdatedAt")] CommandeFournisseurEntity commandeFournisseurEntity)
+        public async Task<IActionResult> Create([Bind("Id,Numero,Commentaire,FournisseurId")] CommandeFournisseurEntity commandeFournisseurEntity)
         {
             if (ModelState.IsValid)
-            {
-                _context.Add(commandeFournisseurEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            {   // recuperer l'utilisateur courant
+                var _user = await _user_manager.GetUserAsync(HttpContext.User);
+                var _contact = await _service_contact.GetOneByUserId(_user.Id);
+                commandeFournisseurEntity.Contact = _contact;
+
+                await _service_commande_fournisseur.Add(commandeFournisseurEntity);
+                return RedirectToAction(nameof(Edit));
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
