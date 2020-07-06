@@ -71,5 +71,29 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
             return await _service_ligne.AddArticle(commande, id_article);
 
         }
+
+        // Quantite totale d'article en tension (representent une charge pour le stock)
+        public int getTotalPendingArticles(int id_article)
+        {   
+            int total = _repository.getTotalPendingArticles(id_article);
+            return total;
+        }
+
+        public async Task<int> calculateArticleAdvisedQuantity(ArticleEntity article)
+        {
+            var i = 0;
+            var proj = 0;
+            var quantite = 0;
+            do
+            {
+                i++;
+                quantite = article.Threshold * i;
+                proj = await _service_stock.Projection(  article.Id ) + quantite;
+            }
+            while( proj < article.Threshold ); 
+
+            return quantite;
+        }
+
     }
 }
