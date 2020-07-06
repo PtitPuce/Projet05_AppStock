@@ -3,14 +3,16 @@ using System;
 using AppStock.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AppStock.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200706071534_FournisseurWithSeed")]
+    partial class FournisseurWithSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,10 +126,6 @@ namespace AppStock.Migrations
                         .HasColumnName("commande_uid")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AdresseId")
-                        .HasColumnName("commande_adresse_uid")
-                        .HasColumnType("int");
-
                     b.Property<string>("Commentaire")
                         .HasColumnName("commande_commentaire")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -161,8 +159,6 @@ namespace AppStock.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AdresseId");
 
                     b.HasIndex("ContactId");
 
@@ -237,83 +233,6 @@ namespace AppStock.Migrations
                     b.ToTable("app_contact");
                 });
 
-            modelBuilder.Entity("AppStock.Models.InventaireEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("inventaire_uid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ArticleFamilleId")
-                        .HasColumnName("article_famille_uid")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnName("created_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DateCloture")
-                        .HasColumnName("inventaire_date_cloture")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnName("is_deleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("NomInventaireStatutId")
-                        .HasColumnName("inventaire_statut_uid")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnName("updated_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnName("inventaire_user_uid")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleFamilleId");
-
-                    b.HasIndex("NomInventaireStatutId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("app_inventaire");
-                });
-
-            modelBuilder.Entity("AppStock.Models.InventaireLigneEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("inventaire_ligne_uid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ArticleId")
-                        .HasColumnName("inventaire_ligne_article_uid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InventaireId")
-                        .HasColumnName("inventaire_ligne_inventaire_uid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantiteComptee")
-                        .HasColumnName("inventaire_ligne_quantite_comptee")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantiteTheorique")
-                        .HasColumnName("inventaire_ligne_quantite_theorique")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleId");
-
-                    b.HasIndex("InventaireId");
-
-                    b.ToTable("app_inventaire_ligne");
-                });
             modelBuilder.Entity("AppStock.Models.FournisseurEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -386,28 +305,6 @@ namespace AppStock.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("app_nom_commande_type");
-                });
-
-            modelBuilder.Entity("AppStock.Models.NomInventaireStatutEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("inventaire_statut_uid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnName("inventaire_statut_code")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Libelle")
-                        .IsRequired()
-                        .HasColumnName("inventaire_statut_libelle")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("app_nom_inventaire_statut");
                 });
 
             modelBuilder.Entity("AppStock.Models.NomTypeTVAEntity", b =>
@@ -670,10 +567,6 @@ namespace AppStock.Migrations
 
             modelBuilder.Entity("AppStock.Models.CommandeEntity", b =>
                 {
-                    b.HasOne("AppStock.Models.AdresseEntity", "Adresse")
-                        .WithMany()
-                        .HasForeignKey("AdresseId");
-
                     b.HasOne("AppStock.Models.ContactEntity", "Contact")
                         .WithMany()
                         .HasForeignKey("ContactId")
@@ -719,39 +612,6 @@ namespace AppStock.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("AppStock.Models.InventaireEntity", b =>
-                {
-                    b.HasOne("AppStock.Models.ArticleFamilleEntity", "ArticleFamille")
-                        .WithMany()
-                        .HasForeignKey("ArticleFamilleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AppStock.Models.NomInventaireStatutEntity", "NomInventaireStatut")
-                        .WithMany()
-                        .HasForeignKey("NomInventaireStatutId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AppStock.Models.InventaireLigneEntity", b =>
-                {
-                    b.HasOne("AppStock.Models.ArticleEntity", "Article")
-                        .WithMany()
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AppStock.Models.InventaireEntity", "Inventaire")
-                        .WithMany("InventaireLignes")
-                        .HasForeignKey("InventaireId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
             modelBuilder.Entity("AppStock.Models.FournisseurEntity", b =>
                 {
                     b.HasOne("AppStock.Models.AdresseEntity", "Adresse")
@@ -818,7 +678,7 @@ namespace AppStock.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
-        #pragma warning restore 612, 618
+#pragma warning restore 612, 618
         }
     }
 }
