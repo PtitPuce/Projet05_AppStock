@@ -71,5 +71,21 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
             return _context.CommandeFournisseurEntities.Any(i => i.Id == id);
         }
 
+
+        public int getTotalPendingArticles(int id_article)
+        {
+            var _total = 0;
+
+            _total = _context.CommandeFournisseurLigneEntities
+                        .Include(o => o.CommandeFournisseur)
+                            .ThenInclude(o => o.NomCommandeFournisseurStatut)
+                        .Where(o => o.CommandeFournisseur.NomCommandeFournisseurStatut.Code == "C") // C == En cours de création (pseudo-panier)
+                        .Where(o => o.ArticleId == id_article)
+                        .Sum(o => o.Quantite)
+                        ;
+
+            return _total;
+        }
+
     }
 }

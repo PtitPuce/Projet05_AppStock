@@ -15,7 +15,6 @@ namespace AppStock.Infrastructure.Services.Stock
         Task InitStockForArticle(ArticleEntity article);
         bool Exist(int id);
         bool IsStable(StockEntity item);
-        
 
         #pragma warning restore 1591
     }

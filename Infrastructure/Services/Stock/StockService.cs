@@ -85,5 +85,6 @@ namespace AppStock.Infrastructure.Services.Stock
             
             return val;
         }
+
     }
 }

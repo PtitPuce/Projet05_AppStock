@@ -16,6 +16,8 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
 
         // ARTICLES
         Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commandeFournisseur, int id_article);
+        int getTotalPendingArticles(int id_article);
+        int calculateArticleAdvisedQuantity(ArticleEntity article, int projection_calculated);
 
         #pragma warning restore 1591         
     }

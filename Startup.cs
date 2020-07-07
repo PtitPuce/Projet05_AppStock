@@ -29,6 +29,8 @@ using AppStock.Infrastructure.Services.InventaireLigne;
 using AppStock.Infrastructure.Services.CommandeFournisseur;
 using AppStock.Infrastructure.Services.CommandeFournisseurLigne;
 
+using AppStock.Infrastructure.Services.StockProjection;
+
 using AppStock.Infrastructure.Repositories.Article;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
 using AppStock.Infrastructure.Repositories.NomTypeTVA;
@@ -43,7 +45,7 @@ using AppStock.Infrastructure.Repositories.CommandeFournisseur;
 using AppStock.Infrastructure.Repositories.CommandeFournisseurLigne;
 
 using AutoMapper;
-
+using AppStock.Infrastructure.Extensions;
 
 namespace AppStock
 {
@@ -89,6 +91,9 @@ namespace AppStock
 
             services.AddAutoMapper(typeof(Startup).Assembly);
 
+            services.AddLazyResolution();
+
+
             // S E R V I C E S //
             services.AddTransient<IArticleService, ArticleService>();
             services.AddTransient<IArticleFamilleService, ArticleFamilleService>();
@@ -116,7 +121,9 @@ namespace AppStock
             services.AddTransient<IInventaireLigneRepository, InventaireLigneRepository>();
             services.AddTransient<ICommandeFournisseurRepository, CommandeFournisseurRepository>();
             services.AddTransient<ICommandeFournisseurLigneRepository, CommandeFournisseurLigneRepository>();
-            
+
+            // UTILS
+            services.AddTransient<IStockProjectionService, StockProjectionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
