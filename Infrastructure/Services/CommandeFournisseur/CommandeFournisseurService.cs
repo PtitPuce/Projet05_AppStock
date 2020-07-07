@@ -8,6 +8,7 @@ using AppStock.Infrastructure.Exceptions;
 using AppStock.Infrastructure.Repositories.CommandeFournisseur;
 using AppStock.Infrastructure.Services.CommandeFournisseurLigne;
 using AppStock.Infrastructure.Services.Stock;
+using AppStock.Infrastructure.Services.StockProjection;
 
 namespace AppStock.Infrastructure.Services.CommandeFournisseur
 {
@@ -16,7 +17,10 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
         private readonly ICommandeFournisseurRepository _repository;
         private readonly ICommandeFournisseurLigneService _service_ligne;
         private readonly IStockService _service_stock;
-        public CommandeFournisseurService(ICommandeFournisseurRepository repository,  ICommandeFournisseurLigneService service_ligne, IStockService service_stock)
+        public CommandeFournisseurService(ICommandeFournisseurRepository repository,
+                                          ICommandeFournisseurLigneService service_ligne,
+                                          IStockService service_stock
+                                          )
         {
              _service_ligne = service_ligne;
              _service_stock = service_stock;
@@ -79,7 +83,7 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
             return total;
         }
 
-        public async Task<int> calculateArticleAdvisedQuantity(ArticleEntity article)
+        public int calculateArticleAdvisedQuantity(ArticleEntity article, int projection_calculated)
         {
             var i = 0;
             var proj = 0;
@@ -88,7 +92,7 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
             {
                 i++;
                 quantite = article.Threshold * i;
-                proj = await _service_stock.Projection(  article.Id ) + quantite;
+                proj = projection_calculated + quantite; // await _service_stock_projection.Projection(  article.Id )
             }
             while( proj < article.Threshold ); 
 

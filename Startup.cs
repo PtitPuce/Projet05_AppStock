@@ -29,6 +29,8 @@ using AppStock.Infrastructure.Services.InventaireLigne;
 using AppStock.Infrastructure.Services.CommandeFournisseur;
 using AppStock.Infrastructure.Services.CommandeFournisseurLigne;
 
+using AppStock.Infrastructure.Services.StockProjection;
+
 using AppStock.Infrastructure.Repositories.Article;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
 using AppStock.Infrastructure.Repositories.NomTypeTVA;
@@ -116,7 +118,9 @@ namespace AppStock
             services.AddTransient<IInventaireLigneRepository, InventaireLigneRepository>();
             services.AddTransient<ICommandeFournisseurRepository, CommandeFournisseurRepository>();
             services.AddTransient<ICommandeFournisseurLigneRepository, CommandeFournisseurLigneRepository>();
-            
+
+            // UTILS
+            services.AddTransient<IStockProjectionService, StockProjectionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
