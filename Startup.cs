@@ -45,7 +45,7 @@ using AppStock.Infrastructure.Repositories.CommandeFournisseur;
 using AppStock.Infrastructure.Repositories.CommandeFournisseurLigne;
 
 using AutoMapper;
-
+using AppStock.Infrastructure.Extensions;
 
 namespace AppStock
 {
@@ -90,6 +90,9 @@ namespace AppStock
             services.AddMvc();
 
             services.AddAutoMapper(typeof(Startup).Assembly);
+
+            services.AddLazyResolution();
+
 
             // S E R V I C E S //
             services.AddTransient<IArticleService, ArticleService>();
