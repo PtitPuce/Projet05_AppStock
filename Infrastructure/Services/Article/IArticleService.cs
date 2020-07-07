@@ -9,6 +9,7 @@ namespace AppStock.Infrastructure.Services.Article
     {
         #pragma warning disable 1591
         Task<IEnumerable<ArticleEntity>> GetAll();
+        Task<IEnumerable<ArticleEntity>> getAllByFournisseurIdAsync(int id);
         Task<ArticleEntity> GetOneById(int id);
         Task<ArticleEntity> Add(ArticleEntity item);
         Task<ArticleEntity> Update(ArticleEntity item);

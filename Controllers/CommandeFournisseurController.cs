@@ -46,8 +46,6 @@ namespace AppStock.Controllers
         // GET: CommandeFournisseur
         public async Task<IActionResult> Index()
         {
-            //var applicationDbContext = _context.CommandeFournisseurEntities.Include(c => c.Contact).Include(c => c.Fournisseur).Include(c => c.NomCommandeFournisseurStatut);
-            //return View(await applicationDbContext.ToListAsync());
             return View(await _service_commande_fournisseur.GetAll());
         }
 
@@ -75,9 +73,7 @@ namespace AppStock.Controllers
         // GET: CommandeFournisseur/Create
         public IActionResult Create()
         {
-            //ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id");
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Raison");
-            //ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Id");
             return View();
         }
 
@@ -95,7 +91,7 @@ namespace AppStock.Controllers
                 commandeFournisseurEntity.Contact = _contact;
 
                 await _service_commande_fournisseur.Add(commandeFournisseurEntity);
-                return RedirectToAction(nameof(Edit));
+                return RedirectToAction(nameof(Index));
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
@@ -104,21 +100,15 @@ namespace AppStock.Controllers
         }
 
         // GET: CommandeFournisseur/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var commandeFournisseurEntity = await _context.CommandeFournisseurEntities.FindAsync(id);
+            var commandeFournisseurEntity = await _service_commande_fournisseur.GetOneById(id);
             if (commandeFournisseurEntity == null)
             {
                 return NotFound();
             }
-            ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
-            ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
-            ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Code", commandeFournisseurEntity.NomCommandeFournisseurStatutId);
+            ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Raison", commandeFournisseurEntity.FournisseurId);
+            ViewData["ArticleId"] = new SelectList(await _service_article.getAllByFournisseurIdAsync(commandeFournisseurEntity.FournisseurId), "Id", "Libelle");
             return View(commandeFournisseurEntity);
         }
 
