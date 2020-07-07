@@ -224,7 +224,7 @@ namespace AppStock.Migrations
 
                     b.HasIndex("NomCommandeFournisseurStatutId");
 
-                    b.ToTable("CommandeFournisseurEntities");
+                    b.ToTable("app_commande_fournisseur");
                 });
 
             modelBuilder.Entity("AppStock.Models.CommandeFournisseurLigneEntity", b =>

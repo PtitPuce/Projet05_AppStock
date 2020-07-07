@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppStock.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200706143940_SuppressionTypeCommande")]
-    partial class SuppressionTypeCommande
+    [Migration("20200707072301_CdeFournisseurStatutLigne")]
+    partial class CdeFournisseurStatutLigne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,7 +226,7 @@ namespace AppStock.Migrations
 
                     b.HasIndex("NomCommandeFournisseurStatutId");
 
-                    b.ToTable("CommandeFournisseurEntities");
+                    b.ToTable("app_commande_fournisseur");
                 });
 
             modelBuilder.Entity("AppStock.Models.CommandeFournisseurLigneEntity", b =>
@@ -471,28 +471,6 @@ namespace AppStock.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("app_nom_commande_statut");
-                });
-
-            modelBuilder.Entity("AppStock.Models.NomCommandeTypeEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("commande_type_uid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnName("commande_type_code")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Libelle")
-                        .IsRequired()
-                        .HasColumnName("commande_type_libelle")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("app_nom_commande_type");
                 });
 
             modelBuilder.Entity("AppStock.Models.NomInventaireStatutEntity", b =>
