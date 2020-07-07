@@ -53,7 +53,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
             {
                 CommandeEntity _commande = new CommandeEntity();
                 _commande.ContactId = id;
-                _commande.NomCommandeStatutId = 1; // hardCode "PANIER"
+                _commande.NomCommandeStatutId = _context.NomCommandeStatutEntities.Where(o => o.Code=="P").FirstOrDefault().Id; // hardCode "PANIER"
                 
                 await AddAsync(_commande);
                 return await GetOneByIdAsync(_commande.Id);
@@ -87,7 +87,7 @@ namespace AppStock.Infrastructure.Repositories.Commande
 
         public async Task<CommandeEntity> ValidateAsync(CommandeEntity item)
         {
-            item.NomCommandeStatutId = 2; // hardCode "VALIDEE"
+            item.NomCommandeStatutId =  _context.NomCommandeStatutEntities.Where(o => o.Code=="A").FirstOrDefault().Id; // A = en attente de preparation
             _context.Update(item);
             await _context.SaveChangesAsync();
             return item;

@@ -18,8 +18,10 @@ namespace AppStock.Data
                 var commande_status = new NomCommandeStatutEntity[]
                 {
                     new NomCommandeStatutEntity { Code = "P",   Libelle = "Panier" },
-                    new NomCommandeStatutEntity { Code = "V",   Libelle = "Validée" },
-                    new NomCommandeStatutEntity { Code = "A",   Libelle = "En attente" }
+                    new NomCommandeStatutEntity { Code = "V",   Libelle = "Livrée" },
+                    new NomCommandeStatutEntity { Code = "A",   Libelle = "En attente de préparation" },
+                    new NomCommandeStatutEntity { Code = "L",   Libelle = "En cours de livraison" },
+                    new NomCommandeStatutEntity { Code = "X",   Libelle = "Annulée" }
                 };
 
                 foreach (NomCommandeStatutEntity s in commande_status)

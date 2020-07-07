@@ -62,6 +62,61 @@ namespace AppStock.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: Commande MONITOR
+        public async Task<IActionResult> Dashboard(string filtre="A")
+        {
+            var applicationDbContext = _context.CommandeEntities
+                                            .Include(c => c.Contact)
+                                            .Include(c => c.NomCommandeStatut)
+                                            .Where(o => o.NomCommandeStatut.Code == filtre );
+
+            ViewData["filtre"] = filtre;
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        // LIVRAISON :: Depart
+        public async Task<IActionResult> StatutStartLivraison(int id)
+        {
+            CommandeEntity commande = await _service_commande.GetOneById(id);
+
+            if(commande != null)
+            {
+                commande.NomCommandeStatut = await _context.NomCommandeStatutEntities.Where(o => o.Code=="L").FirstOrDefaultAsync();
+                await _service_commande.Update(commande);
+
+                
+            }
+
+            return RedirectToAction(nameof(Dashboard), new { filtre="L"});
+        }
+
+        // LIVRAISON :: OK
+        public async Task<IActionResult> StatutConfirmLivraison(int id)
+        {
+            CommandeEntity commande = await _service_commande.GetOneById(id);
+
+            if(commande != null)
+            {
+                commande.NomCommandeStatut = await _context.NomCommandeStatutEntities.Where(o => o.Code=="V").FirstOrDefaultAsync();
+                await _service_commande.Update(commande);
+            }
+
+            return RedirectToAction(nameof(Dashboard), new { filtre="V"});
+        }
+
+        // ANNULATION
+        public async Task<IActionResult> StatutAnnulation(int id)
+        {
+            CommandeEntity commande = await _service_commande.GetOneById(id);
+
+            if(commande != null)
+            {
+                commande.NomCommandeStatut = await _context.NomCommandeStatutEntities.Where(o => o.Code=="X").FirstOrDefaultAsync();
+                await _service_commande.Update(commande);
+            }
+
+            return RedirectToAction(nameof(Dashboard), new { filtre="X"});
+        }
 
         // Panier :: affichage du Panier
         [HttpGet]

@@ -1,0 +1,94 @@
+@model IEnumerable<AppStock.Models.CommandeEntity>
+
+@{
+    ViewData["Title"] = "Traitement des commandes";
+}
+
+<h1>Traitement des commandes</h1>
+<h3>Code :: @ViewData["filtre"]</h3>
+
+
+
+<p>
+    <a asp-action="Dashboard" asp-route-filtre="A">En attente de preparation</a>
+    <a asp-action="Dashboard" asp-route-filtre="L">En cours de livraison</a>
+    <a asp-action="Dashboard" asp-route-filtre="V">Terminées</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Numero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Commentaire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDeleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomCommandeStatut)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Numero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Commentaire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDeleted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomCommandeStatut.Code)
+            </td>
+            <td>
+                @* Controles differents selon le statut des commandes affichees *@
+                @if(@ViewData["filtre"].Equals("A"))
+                {
+                    <a asp-action="StatutStartLivraison" asp-route-id="@item.Id">Départ livraison</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+                else if(@ViewData["filtre"].Equals("L"))
+                {
+                    <a asp-action="StatutConfirmLivraison" asp-route-id="@item.Id">Confirmer livraison</a>
+                    <a asp-action="StatutConfirmLivraison" asp-route-id="@item.Id">Annuler livraison</a>
+                }
+                else if(@ViewData["filtre"].Equals("V"))
+                {
+                    
+                }
+                else if(@ViewData["filtre"].Equals("X"))
+                {
+                    
+                }
+                
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
