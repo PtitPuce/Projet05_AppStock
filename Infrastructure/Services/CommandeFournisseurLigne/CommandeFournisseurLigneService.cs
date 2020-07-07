@@ -20,11 +20,21 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseurLigne
             _service_article = service_article ?? throw new ArgumentNullException(nameof(IArticleService));
         }
 
-        public async Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande, int id_article)
+        public async Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande_fournisseur, ArticleEntity article, int article_quantite)
         {
+            foreach (CommandeFournisseurLigneEntity l in commande_fournisseur.CommandeFournisseurLignes)
+            {
+                if (l.ArticleId == article.Id)
+                {
+                    l.Quantite = l.Quantite + article_quantite;
+                    return await Update(l);
+                }
+            }
+            
             CommandeFournisseurLigneEntity ligne = new CommandeFournisseurLigneEntity();
-            ligne.CommandeFournisseur = commande;
-            ligne.Article = await _service_article.GetOneById(id_article);
+            ligne.CommandeFournisseurId = commande_fournisseur.Id;
+            ligne.ArticleId = article.Id;
+            ligne.Quantite = article_quantite;
 
             return await _repository.AddAsync(ligne);
         }

@@ -46,7 +46,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         
         public async Task<CommandeFournisseurEntity> AddAsync(CommandeFournisseurEntity item)
         {
-            item.NomCommandeFournisseurStatutId = 3; // hardCode "Création"
+            item.NomCommandeFournisseurStatutId = _context.NomCommandeFournisseurStatutEntities.Where(o => o.Code=="C").FirstOrDefault().Id; // A = création
             _context.CommandeFournisseurEntities.Add(item);
             await _context.SaveChangesAsync();
             return item;
@@ -62,6 +62,14 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         public async Task<CommandeFournisseurEntity> DeleteAsync(CommandeFournisseurEntity item)
         {
             item.IsDeleted = true;
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+            return item;
+        }
+
+        public async Task<CommandeFournisseurEntity> ValidateAsync(CommandeFournisseurEntity item)
+        {
+            item.NomCommandeFournisseurStatutId =  _context.NomCommandeFournisseurStatutEntities.Where(o => o.Code=="T").FirstOrDefault().Id; // A = Transmise au transporteur
             _context.Update(item);
             await _context.SaveChangesAsync();
             return item;

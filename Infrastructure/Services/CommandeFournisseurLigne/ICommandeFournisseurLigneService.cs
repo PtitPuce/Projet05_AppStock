@@ -9,7 +9,7 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseurLigne
         #pragma warning disable 1591
         Task<IEnumerable<CommandeFournisseurLigneEntity>> GetAll();
         Task<CommandeFournisseurLigneEntity> GetOneById(int id);
-        Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande, int id_article);
+        Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande_fournisseur, ArticleEntity article, int article_quantite);
         Task<CommandeFournisseurLigneEntity> Update(CommandeFournisseurLigneEntity item);
         Task DeleteById(int id);
         bool Exist(int id);

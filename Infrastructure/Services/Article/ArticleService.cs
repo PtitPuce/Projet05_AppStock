@@ -45,7 +45,7 @@ namespace AppStock.Infrastructure.Services.Article
             return await _repository.GetAllAsync();
         }
 
-        public async Task<IEnumerable<ArticleEntity>> getAllByFournisseurIdAsync(int id)
+        public async Task<IEnumerable<ArticleEntity>> getAllByFournisseurId(int id)
         {
             return await _repository.getAllByFournisseurIdAsync(id);
         }

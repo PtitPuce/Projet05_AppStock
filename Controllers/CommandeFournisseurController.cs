@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +92,7 @@ namespace AppStock.Controllers
                 commandeFournisseurEntity.Contact = _contact;
 
                 await _service_commande_fournisseur.Add(commandeFournisseurEntity);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Edit", new { Id = commandeFournisseurEntity.Id });
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
@@ -107,8 +108,12 @@ namespace AppStock.Controllers
             {
                 return NotFound();
             }
+            if (commandeFournisseurEntity.NomCommandeFournisseurStatut.Code != "C")
+            {
+                throw new NotImplementedException();
+            }
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Raison", commandeFournisseurEntity.FournisseurId);
-            ViewData["ArticleId"] = new SelectList(await _service_article.getAllByFournisseurIdAsync(commandeFournisseurEntity.FournisseurId), "Id", "Libelle");
+            ViewData["ArticleId"] = new SelectList(await _service_article.getAllByFournisseurId(commandeFournisseurEntity.FournisseurId), "Id", "Libelle");
             return View(commandeFournisseurEntity);
         }
 
@@ -117,19 +122,13 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Numero,Commentaire,ContactId,FournisseurId,NomCommandeFournisseurStatutId,NomCommandeFournisseurTypeId,IsDeleted,CreatedAt,UpdatedAt")] CommandeFournisseurEntity commandeFournisseurEntity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Numero,Commentaire,ContactId,FournisseurId,NomCommandeFournisseurStatutId")] CommandeFournisseurEntity commandeFournisseurEntity)
         {
-            if (id != commandeFournisseurEntity.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(commandeFournisseurEntity);
-                    await _context.SaveChangesAsync();
+                    await _service_commande_fournisseur.Update(commandeFournisseurEntity);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -142,12 +141,67 @@ namespace AppStock.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Raison", commandeFournisseurEntity.FournisseurId);
+                ViewData["ArticleId"] = new SelectList(await _service_article.getAllByFournisseurId(commandeFournisseurEntity.FournisseurId), "Id", "Libelle");
+                return View(commandeFournisseurEntity);
             }
             ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
             ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Code", commandeFournisseurEntity.NomCommandeFournisseurStatutId);
             return View(commandeFournisseurEntity);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FournisseurChange(int CommandeFournisseurId, int FournisseurId)
+        {
+            // Prévoir un avertissement
+
+            var commande_fournisseur = await _service_commande_fournisseur.GetOneById(CommandeFournisseurId);
+            if ( commande_fournisseur.FournisseurId != FournisseurId)
+            {
+                await _service_commande_fournisseur.FournisseurChange(commande_fournisseur, FournisseurId);
+            }
+            return RedirectToAction("Edit", new { Id = CommandeFournisseurId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ArticleAdd(int CommandeFournisseurId, int ArticleId, int QuantiteArticle)
+        {
+            var commande_fournisseur = await _service_commande_fournisseur.GetOneById(CommandeFournisseurId);
+            var article = await _service_article.GetOneById(ArticleId);
+            await _service_commande_fournisseur.AddArticle(commande_fournisseur, article, QuantiteArticle);
+            return RedirectToAction("Edit", new { Id = CommandeFournisseurId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateLigneQuantite(int CommandeFournisseurId, int LigneQuantite, int LigneId)
+        {
+            CommandeFournisseurLigneEntity ligne = await _service_commande_fournisseur_ligne.GetOneById(LigneId);
+            ligne.Quantite = LigneQuantite;
+
+            await _service_commande_fournisseur_ligne.Update(ligne);
+
+            return RedirectToAction("Edit", new { Id = CommandeFournisseurId });
+        }
+
+        public async Task<IActionResult> DeleteLigne(int id)
+        {
+            var commande_fournisseur_ligne = await _service_commande_fournisseur_ligne.GetOneById(id);
+            if (commande_fournisseur_ligne == null)
+            {
+                return NotFound();
+            }
+            int commande_fournisseur_id = commande_fournisseur_ligne.CommandeFournisseurId;
+            await _service_commande_fournisseur_ligne.DeleteById(commande_fournisseur_ligne.Id);
+
+            return RedirectToAction("Edit", new { Id = commande_fournisseur_id });
+        }
+
+        public async Task<IActionResult> ValiderCommande(int id)
+        {
+            var commande_fournisseur = await _service_commande_fournisseur.GetOneById(id);
+            await _service_commande_fournisseur.Validate(commande_fournisseur);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: CommandeFournisseur/Delete/5

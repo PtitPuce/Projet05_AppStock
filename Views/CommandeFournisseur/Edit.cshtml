@@ -15,27 +15,67 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ContactId" />
+            <input type="hidden" asp-for="FournisseurId" >
+            <input type="hidden" asp-for="NomCommandeFournisseurStatutId" />
+            
             <div class="form-group">
-                <label asp-for="FournisseurId" class="control-label"></label>
-                <select asp-for="FournisseurId" class="form-control" asp-items="ViewBag.FournisseurId"></select>
-                <span asp-validation-for="FournisseurId" class="text-danger"></span>
+                <label asp-for="Numero" class="control-label"></label>
+                <input asp-for="Numero" class="form-control" />
+                <span asp-validation-for="Numero" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="Commentaire" class="control-label"></label>
+                <input asp-for="Commentaire" class="form-control" />
+                <span asp-validation-for="Commentaire" class="text-danger"></span>
             </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Enregistrer" class="btn btn-primary" />
+            </div>
+        
         </form>
     </div>
 </div>
 
+<hr>
 
-
-
-<div class="form-group">
-    <label class="control-label"></label>
-    <select class ="form-control" asp-items="ViewBag.ArticleId">
-</select>
+<div>
+    <form asp-action="FournisseurChange" method="POST">
+        <input type="hidden" asp-for="Id" name="CommandeFournisseurId">
+        <div class="form-group">
+            <label asp-for="FournisseurId" class="control-label"></label>
+            <select asp-for="FournisseurId" class="form-control" asp-items="ViewBag.FournisseurId"></select>
+            <span asp-validation-for="FournisseurId" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Modifier le fournisseur" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 
+<hr>
+
+<div>
+    Ajout d'article
+    <form asp-action="ArticleAdd" method="POST">
+        <input type="hidden" asp-for="Id" name="CommandeFournisseurId">
+        <div class="form-group">
+            <label class="control-label"></label>
+            <select class ="form-control" asp-items="ViewBag.ArticleId" name="ArticleId"></select>
+        </div>
+        <div class="form-group">
+            <label for="QuantiteArticle">Quantité</label>
+            <input name="QuantiteArticle" class="form-control" type="number"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Ajouter" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<hr>
 
 <div>
     @if(Model.CommandeFournisseurLignes == null)
@@ -44,6 +84,7 @@
     }
     else
     {
+        <p>Liste des articles de la commande</p>
         @foreach (CommandeFournisseurLigneEntity ligne in Model.CommandeFournisseurLignes)
         {
             <table>
@@ -51,24 +92,33 @@
                 <td>
                     
                     <form asp-action="UpdateLigneQuantite" method="POST">
-                        <input type="hidden" asp-for="@ligne.Id" name="ligne_Id">
+                        <input type="hidden" asp-for="Id" name="CommandeFournisseurId">
+                        <input type="hidden" asp-for="@ligne.Id" name="LigneId">
                         <div class="form-group">
-                            <input asp-for="@ligne.Quantite" name="ligne_Quantite" class="form-control" />
+                            <input asp-for="@ligne.Quantite" name="LigneQuantite" class="form-control" />
                             <span asp-validation-for="@ligne.Quantite" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                        <div class="form-group">
+                            <a asp-action="DeleteLigne" asp-route-id="@ligne.Id">Delete</a>
                         </div>
                     </form>
                 </td>
             </table>
         }
     }
-    
+</div>
+
+<hr>
+
+<div>
+    <a asp-action="ValiderCommande" asp-route-id="@Model.Id">Confirmer et envoyer la commande</a>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Retour</a>
 </div>
 
 @section Scripts {

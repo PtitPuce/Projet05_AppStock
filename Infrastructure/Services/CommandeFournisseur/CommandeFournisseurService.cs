@@ -64,19 +64,44 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
             return await _repository.UpdateAsync(item);
         }
 
+        public async Task<CommandeFournisseurEntity> Validate(CommandeFournisseurEntity item)
+        {
+            if(!_repository.Exist(item.Id)){
+                throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
+            }
+            return await _repository.ValidateAsync(item);
+        }
+
         public bool Exist(int id){
             return _repository.Exist(id);
         }
 
-
         // ARTICLES
-        public async Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande, int id_article)
+        public async Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande_fournisseur, ArticleEntity article, int article_quantite)
         {
             /*
                 delegation service CommandeFournisseurLigne
             */
-            return await _service_ligne.AddArticle(commande, id_article);
+            return await _service_ligne.AddArticle(commande_fournisseur, article, article_quantite);
 
+        }
+
+        public async Task<CommandeFournisseurEntity> FournisseurChange(CommandeFournisseurEntity commande_fournisseur, int id_fournisseur)
+        {
+            if(!_repository.Exist(commande_fournisseur.Id))
+            {
+                throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
+            }
+
+            // Suppression des lignes de la commande
+            foreach (CommandeFournisseurLigneEntity l in commande_fournisseur.CommandeFournisseurLignes)
+            {
+                await _service_ligne.DeleteById(l.Id);
+            }
+            
+            // Modification du fournisseur
+            commande_fournisseur.FournisseurId = id_fournisseur;
+            return await _repository.UpdateAsync(commande_fournisseur);
         }
 
         // Quantite totale d'article en tension (representent une charge pour le stock)

@@ -11,11 +11,13 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
         Task<CommandeFournisseurEntity> GetOneById(int id);
         Task<CommandeFournisseurEntity> Add(CommandeFournisseurEntity item);
         Task<CommandeFournisseurEntity> Update(CommandeFournisseurEntity item);
+        Task<CommandeFournisseurEntity> Validate(CommandeFournisseurEntity item);
         Task DeleteById(int id);
         bool Exist(int id);
 
         // ARTICLES
-        Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commandeFournisseur, int id_article);
+        Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande_fournisseur, ArticleEntity article, int quantite_article);
+        Task<CommandeFournisseurEntity> FournisseurChange(CommandeFournisseurEntity commande_fournisseur, int id_fournisseur);
         int getTotalPendingArticles(int id_article);
         int calculateArticleAdvisedQuantity(ArticleEntity article, int projection_calculated);
 

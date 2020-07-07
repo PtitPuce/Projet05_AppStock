@@ -13,6 +13,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         Task<CommandeFournisseurEntity> AddAsync(CommandeFournisseurEntity item);
         Task<CommandeFournisseurEntity> UpdateAsync(CommandeFournisseurEntity item);
         Task<CommandeFournisseurEntity> DeleteAsync(CommandeFournisseurEntity item);
+        Task<CommandeFournisseurEntity> ValidateAsync(CommandeFournisseurEntity item);
         bool Exist(int id);
         int getTotalPendingArticles(int id_article);
 

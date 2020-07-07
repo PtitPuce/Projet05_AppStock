@@ -58,7 +58,6 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseurLigne
             await _context.SaveChangesAsync();
             return item;
         }
-        
 
         public bool Exist(int id)
         {
