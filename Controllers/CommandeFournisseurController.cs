@@ -43,6 +43,53 @@ namespace AppStock.Controllers
             _service_contact = service_contact ;
             _service_stock = service_stock ;
         }
+        // GET: Commande MONITOR
+        public async Task<IActionResult> Dashboard(string filtre="T")
+        {
+            var applicationDbContext = _context.CommandeFournisseurEntities
+                                    .Include(o => o.Fournisseur)
+                                    .Include(o => o.Contact)
+                                        .ThenInclude(o => o.Adresse)
+                                    .Include(o => o.NomCommandeFournisseurStatut)
+                                    .Include(o => o.CommandeFournisseurLignes)
+                                        .ThenInclude(o => o.Article)
+                                            .ThenInclude(o => o.NomTypeTVA)
+                                    .Where(o => o.NomCommandeFournisseurStatut.Code == filtre );
+
+            ViewData["filtre"] = filtre;
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        // RECEPTION
+        public async Task<IActionResult> StatutConfirmReception(int id)
+        {
+            CommandeFournisseurEntity commande_fournisseur = await _service_commande_fournisseur.GetOneById(id);
+
+            if(commande_fournisseur != null)
+            {
+                commande_fournisseur.NomCommandeFournisseurStatut = await _context.NomCommandeFournisseurStatutEntities.Where(o => o.Code=="R").FirstOrDefaultAsync();
+                await _service_commande_fournisseur.Update(commande_fournisseur);
+
+                // impact stock
+                await _service_commande_fournisseur.UploadStock(commande_fournisseur);
+            }
+
+            return RedirectToAction(nameof(Dashboard), new { filtre="V"});
+        }
+
+        // ANNULATION
+        public async Task<IActionResult> StatutAnnulation(int id)
+        {
+            CommandeFournisseurEntity commande_fournisseur = await _service_commande_fournisseur.GetOneById(id);
+
+            if(commande_fournisseur != null)
+            {
+                commande_fournisseur.NomCommandeFournisseurStatut = await _context.NomCommandeFournisseurStatutEntities.Where(o => o.Code=="A").FirstOrDefaultAsync();
+                await _service_commande_fournisseur.Update(commande_fournisseur);
+            }
+
+            return RedirectToAction(nameof(Dashboard), new { filtre="A"});
+        }
 
         // GET: CommandeFournisseur
         public async Task<IActionResult> Index()

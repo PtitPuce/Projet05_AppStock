@@ -12,6 +12,8 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
         Task<CommandeFournisseurEntity> Add(CommandeFournisseurEntity item);
         Task<CommandeFournisseurEntity> Update(CommandeFournisseurEntity item);
         Task<CommandeFournisseurEntity> Validate(CommandeFournisseurEntity item);
+        Task<CommandeFournisseurEntity> UploadStock(CommandeFournisseurEntity item);
+        
         Task DeleteById(int id);
         bool Exist(int id);
 

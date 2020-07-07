@@ -75,7 +75,22 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
         public bool Exist(int id){
             return _repository.Exist(id);
         }
-
+        public async Task<CommandeFournisseurEntity> UploadStock(CommandeFournisseurEntity item)
+        {
+            if(!_repository.Exist(item.Id)){
+                throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
+            }
+            
+            // Mise à jour de la quantité en stock pour chaque article
+            foreach (CommandeFournisseurLigneEntity l in item.CommandeFournisseurLignes)
+            {
+                StockEntity s = await _service_stock.GetOneById(l.ArticleId);
+                s.Quantite = s.Quantite + l.Quantite;
+                await _service_stock.Update(s);
+            }
+            
+            return item;
+        }
         // ARTICLES
         public async Task<CommandeFournisseurLigneEntity> AddArticle(CommandeFournisseurEntity commande_fournisseur, ArticleEntity article, int article_quantite)
         {

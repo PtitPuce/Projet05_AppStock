@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AppStock.Models
 {
     [Table("app_commande_fournisseur")]
-    public class CommandeFournisseurEntity
+    public class CommandeFournisseurEntity : ITimedEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("commande_fournisseur_uid")]

@@ -1,0 +1,96 @@
+@model IEnumerable<AppStock.Models.CommandeFournisseurEntity>
+
+@{
+    ViewData["Title"] = "Traitement des commandes fournisseur";
+}
+@inject AppStock.Infrastructure.Services.Stock.IStockService ServiceStock
+
+
+<h1>Traitement des commandes fournisseur</h1>
+<h3>Code :: @ViewData["filtre"]</h3>
+
+
+
+<p>
+    <a asp-action="Dashboard" asp-route-filtre="C">En cours de création</a>
+    <a asp-action="Dashboard" asp-route-filtre="T">Transmise au fournisseur</a>
+    <a asp-action="Dashboard" asp-route-filtre="R">Réceptionnée</a>
+    <a asp-action="Dashboard" asp-route-filtre="A">Annulée</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Numero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Commentaire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDeleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NomCommandeFournisseurStatut)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Numero)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Commentaire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDeleted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contact.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomCommandeFournisseurStatut.Code)
+            </td>
+            <td>
+                @* Controles differents selon le statut des commandes affichees *@
+                @if(@ViewData["filtre"].Equals("C"))
+                {
+
+                }
+                else if(@ViewData["filtre"].Equals("T"))
+                {
+                    <a asp-action="StatutConfirmReception" asp-route-id="@item.Id">Confirmer livraison</a>
+                    <a asp-action="StatutAnnulation" asp-route-id="@item.Id">Annuler commande</a>
+                }
+                else if(@ViewData["filtre"].Equals("R"))
+                {
+                    
+                }
+                else if(@ViewData["filtre"].Equals("A"))
+                {
+                    
+                }
+                
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
