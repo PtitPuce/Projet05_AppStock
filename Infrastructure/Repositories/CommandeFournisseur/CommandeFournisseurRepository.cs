@@ -88,7 +88,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
             _total = _context.CommandeFournisseurLigneEntities
                         .Include(o => o.CommandeFournisseur)
                             .ThenInclude(o => o.NomCommandeFournisseurStatut)
-                        .Where(o => o.CommandeFournisseur.NomCommandeFournisseurStatut.Code == "C") // C == En cours de création (pseudo-panier)
+                        .Where(o => o.CommandeFournisseur.NomCommandeFournisseurStatut.Code == "T") // T == Transmis au Fournisseur (le stock est engagé)
                         .Where(o => o.ArticleId == id_article)
                         .Sum(o => o.Quantite)
                         ;

@@ -11,7 +11,10 @@ namespace AppStock.Infrastructure.Services.Commande
         Task<CommandeEntity> GetOneById(int id);
         Task<CommandeEntity> Add(CommandeEntity item);
         Task<CommandeEntity> Update(CommandeEntity item);
-        Task<CommandeEntity> Validate(CommandeEntity item); // impacte physiquement le stock
+        Task<CommandeEntity> Validate(CommandeEntity item); 
+        Task<CommandeEntity> DownloadStock(CommandeEntity item); 
+        Task<CommandeEntity> UploadStock(CommandeEntity item);  // en cas d'annulation pendant statut livraison
+        
         Task DeleteById(int id);
         bool Exist(int id);
 

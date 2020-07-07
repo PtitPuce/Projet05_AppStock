@@ -70,6 +70,16 @@ namespace AppStock.Infrastructure.Services.Commande
             if(!_repository.Exist(item.Id)){
                 throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
             }
+            // change le statut
+            return await _repository.ValidateAsync(item);
+        }
+
+        public async Task<CommandeEntity> DownloadStock(CommandeEntity item)
+        {
+            // impacte le stock
+            if(!_repository.Exist(item.Id)){
+                throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
+            }
             
             // Mise à jour de la quantité en stock pour chaque article
             foreach (CommandeLigneEntity l in item.CommandeLignes)
@@ -79,7 +89,25 @@ namespace AppStock.Infrastructure.Services.Commande
                 await _service_stock.Update(s);
             }
 
-            return await _repository.ValidateAsync(item);
+            return item;
+        }
+
+        public async Task<CommandeEntity> UploadStock(CommandeEntity item)
+        {
+            // impacte le stock
+            if(!_repository.Exist(item.Id)){
+                throw new NotFoundException(ExceptionMessageUtil.NOT_FOUND);
+            }
+            
+            // Mise à jour de la quantité en stock pour chaque article
+            foreach (CommandeLigneEntity l in item.CommandeLignes)
+            {
+                StockEntity s = await _service_stock.GetOneById(l.ArticleId);
+                s.Quantite = s.Quantite + l.Quantite;
+                await _service_stock.Update(s);
+            }
+            
+            return item;
         }
 
         public bool Exist(int id){

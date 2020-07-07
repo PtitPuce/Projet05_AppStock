@@ -84,7 +84,8 @@ namespace AppStock.Controllers
                 commande.NomCommandeStatut = await _context.NomCommandeStatutEntities.Where(o => o.Code=="L").FirstOrDefaultAsync();
                 await _service_commande.Update(commande);
 
-                
+                // impact stock
+                await _service_commande.DownloadStock(commande);
             }
 
             return RedirectToAction(nameof(Dashboard), new { filtre="L"});
@@ -108,11 +109,19 @@ namespace AppStock.Controllers
         public async Task<IActionResult> StatutAnnulation(int id)
         {
             CommandeEntity commande = await _service_commande.GetOneById(id);
+            bool wasLivraison = false;
 
             if(commande != null)
             {
+                wasLivraison = commande.NomCommandeStatut.Code == "L";
                 commande.NomCommandeStatut = await _context.NomCommandeStatutEntities.Where(o => o.Code=="X").FirstOrDefaultAsync();
                 await _service_commande.Update(commande);
+                
+                // si c'etait en cours de livraison, alors on renfloue le stock
+                if(wasLivraison)
+                {
+                    await _service_commande.UploadStock(commande);
+                }
             }
 
             return RedirectToAction(nameof(Dashboard), new { filtre="X"});

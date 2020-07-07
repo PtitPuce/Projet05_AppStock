@@ -2,7 +2,10 @@
 @{
     ViewData["Title"] = "Index";
 }
-@inject AppStock.Infrastructure.Services.Commande.ICommandeService Service
+@inject AppStock.Infrastructure.Services.Commande.ICommandeService ServiceCommande
+@inject AppStock.Infrastructure.Services.CommandeFournisseur.ICommandeFournisseurService ServiceCommandeFournisseur
+@inject AppStock.Infrastructure.Services.StockProjection.IStockProjectionService ServiceStockProjection
+
 
 <h1>Articles en stock</h1>
 
@@ -22,7 +25,13 @@
                 @Html.DisplayNameFor(model => model.Quantite)
             </th>
             <th>
-                Charge totale
+                Qte. Engagée
+            </th>
+            <th>
+                Qte. Fournisseur
+            </th>
+            <th>
+                Projection
             </th>
             @*
             <th>Deleted ?</th>
@@ -43,7 +52,14 @@
                 @Html.DisplayFor(modelItem => item.Quantite)
             </td>
             <td>
-                @Service.getTotalPendingArticles(item.ArticleID)
+                @ServiceCommande.getTotalPendingArticles(item.ArticleID)
+            </td>
+            <td>
+                @ServiceCommandeFournisseur.getTotalPendingArticles(item.ArticleID)
+            </td>
+            
+            <td>
+                @ServiceStockProjection.Projection(item.Article.Id).Result
             </td>
             @*<td>@item.IsDeleted</td>*@
             <td>

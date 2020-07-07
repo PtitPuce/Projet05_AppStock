@@ -7,15 +7,23 @@ using AppStock.Utils;
 using AppStock.Infrastructure.Exceptions;
 using AppStock.Infrastructure.Repositories.Stock;
 
+using AppStock.Infrastructure.Services.StockProjection;
+
+
 
 namespace AppStock.Infrastructure.Services.Stock
 {
     public class StockService : IStockService
     {
         private readonly IStockRepository _repository;
-        public StockService(IStockRepository repository)
+        private readonly Lazy<IStockProjectionService> _service_stock_projection;
+        public StockService(
+                                IStockRepository repository,
+                                Lazy<IStockProjectionService> service_stock_projection
+                                )
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(IStockRepository));
+            _service_stock_projection = service_stock_projection;
         }
 
         public async Task<StockEntity> Add(StockEntity item)
@@ -84,6 +92,17 @@ namespace AppStock.Infrastructure.Services.Stock
             }
             
             return val;
+        }
+
+        public async Task<bool> IsSupposedlyAvailable(int id_article, int quantite)
+        {
+            bool value = false;
+            int proj = await _service_stock_projection.Value.Projection(id_article);
+            if(proj >= quantite)
+            {
+                value = true;
+            }
+            return value;
         }
 
     }

@@ -94,11 +94,13 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
             }
 
             // Suppression des lignes de la commande
-            foreach (CommandeFournisseurLigneEntity l in commande_fournisseur.CommandeFournisseurLignes)
-            {
-                await _service_ligne.DeleteById(l.Id);
-            }
-            
+            // foreach (CommandeFournisseurLigneEntity l in commande_fournisseur.CommandeFournisseurLignes)
+            // {
+            //     await _service_ligne.DeleteById(l.Id);
+            // }
+            commande_fournisseur.CommandeFournisseurLignes = null;
+            await Update(commande_fournisseur);
+
             // Modification du fournisseur
             commande_fournisseur.FournisseurId = id_fournisseur;
             return await _repository.UpdateAsync(commande_fournisseur);
@@ -111,7 +113,7 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
             return total;
         }
 
-        public int calculateArticleAdvisedQuantity(ArticleEntity article, int projection_calculated)
+        public int calculateArticleAdvisedQuantity(ArticleEntity article)
         {
             var i = 0;
             var proj = 0;

@@ -3,6 +3,7 @@
     ViewData["Title"] = "Panier";
 }
 @inject AppStock.Infrastructure.Services.CommandeLigne.ICommandeLigneService ServiceLigne
+@inject AppStock.Infrastructure.Services.Stock.IStockService ServiceStock
 
 <h1>Index</h1>
 
@@ -43,6 +44,8 @@
         {
             <table>
                 <td>@ligne.Article.Libelle</td>
+                <td>Disponibilite : @ServiceStock.IsSupposedlyAvailable(ligne.ArticleId, ligne.Quantite).Result </td>
+                
                 <td>
                     
                     <form asp-action="UpdateLigneQuantite" method="POST">

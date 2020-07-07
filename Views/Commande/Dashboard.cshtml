@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Traitement des commandes";
 }
+@inject AppStock.Infrastructure.Services.Stock.IStockService ServiceStock
+
 
 <h1>Traitement des commandes</h1>
 <h3>Code :: @ViewData["filtre"]</h3>
@@ -13,6 +15,7 @@
     <a asp-action="Dashboard" asp-route-filtre="A">En attente de preparation</a>
     <a asp-action="Dashboard" asp-route-filtre="L">En cours de livraison</a>
     <a asp-action="Dashboard" asp-route-filtre="V">Terminées</a>
+    <a asp-action="Dashboard" asp-route-filtre="X">Annulation</a>
 </p>
 <table class="table">
     <thead>
@@ -75,7 +78,7 @@
                 else if(@ViewData["filtre"].Equals("L"))
                 {
                     <a asp-action="StatutConfirmLivraison" asp-route-id="@item.Id">Confirmer livraison</a>
-                    <a asp-action="StatutConfirmLivraison" asp-route-id="@item.Id">Annuler livraison</a>
+                    <a asp-action="StatutAnnulation" asp-route-id="@item.Id">Annuler livraison</a>
                 }
                 else if(@ViewData["filtre"].Equals("V"))
                 {
