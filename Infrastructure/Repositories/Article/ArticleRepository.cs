@@ -28,6 +28,18 @@ namespace AppStock.Infrastructure.Repositories.Article
                                     ;
         }
 
+        public async Task<IEnumerable<ArticleEntity>> getAllByFournisseurIdAsync(int id)
+        {
+            return await _context.ArticleEntities
+                                    .Include(a => a.Fournisseur)
+                                    .Include(a => a.ArticleFamille)
+                                    .Include(a => a.NomTypeTVA)
+                                    .Include(a => a.Stock)
+                                    .Where(a=> a.FournisseurId == id)
+                                    .ToListAsync()
+                                    ;
+        }
+
         public IQueryable<ArticleEntity> QueryForStock(){
             var query =  _context.ArticleEntities
                                 .Where(o=> o.Stock == null)

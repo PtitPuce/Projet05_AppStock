@@ -11,6 +11,7 @@ namespace AppStock.Infrastructure.Repositories.Article
         #pragma warning disable 1591
         
         Task<IEnumerable<ArticleEntity>> GetAllAsync();
+        Task<IEnumerable<ArticleEntity>> getAllByFournisseurIdAsync(int id);
         Task<ArticleEntity> GetOneByIdAsync(int id);
         Task<ArticleEntity> AddAsync(ArticleEntity item);
         Task<ArticleEntity> UpdateAsync(ArticleEntity item);

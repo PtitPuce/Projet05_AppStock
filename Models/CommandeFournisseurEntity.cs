@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,6 +19,7 @@ namespace AppStock.Models
         [Column("commande_fournisseur_contact_uid")]
         public int ContactId { get; set; }
         [Column("commande_fournisseur_fournisseur_uid")]
+        [DisplayName("Fournisseur")]
         public int FournisseurId { get; set; }
         [Column("commande_fournisseur_statut_uid")]
         public int NomCommandeFournisseurStatutId { get; set; }

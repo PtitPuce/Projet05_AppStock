@@ -46,6 +46,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         
         public async Task<CommandeFournisseurEntity> AddAsync(CommandeFournisseurEntity item)
         {
+            item.NomCommandeFournisseurStatutId = 3; // hardCode "Création"
             _context.CommandeFournisseurEntities.Add(item);
             await _context.SaveChangesAsync();
             return item;
