@@ -17,7 +17,10 @@
             <td>
                 @if(@ServiceStock.IsSupposedlyUnavailableForCommande(Model).Result)
                 {
-                    <text>Retard prévu sur le délai livraison</text>
+                    <p style="color:red;font-weight:bold;">< Retard prévu sur le délai livraison ></p>
+                }else
+                {
+                    <p style="color:green;">< Délai de livraison normaux ></p>
                 }
             </td>
         </tr>
@@ -58,8 +61,6 @@
                         <td>
                             @ligne.Article.Libelle
                         </td>
-                        
-                        
                         <td>
                             @ServiceStock.IsSupposedlyAvailable(ligne.ArticleId, ligne.Quantite).Result
                         </td>
@@ -81,7 +82,7 @@
                         </td>
                         
                         <td>
-                            <a asp-action="DeleteLigne" asp-route-id="@ligne.Id">Supprimer</a>
+                            <a asp-action="DeleteLigne" asp-route-id="@ligne.Id"><button type="button" class="btn btn-danger">Supprimer</button></a>
                         </td>
                     </tr>
                 }
@@ -91,6 +92,6 @@
 </div>
 
 <div>
-    <a asp-action="AdresseLivraison" asp-route-id="@Model.Id">Valider la commande</a>
-    <a asp-action="Index" asp-controller="Catalogue">Retour au catalogue</a>
+    <a asp-action="AdresseLivraison" asp-route-id="@Model.Id"><button type="button" class="btn btn-success">Valider la commande</button></a>
+    <a asp-action="Index" asp-controller="Catalogue"><button type="button" class="btn btn-secondary">Retour au catalogue</button></a>
 </div>
