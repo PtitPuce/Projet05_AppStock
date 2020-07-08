@@ -11,6 +11,7 @@ using AppStock.Models;
 using AppStock.Models.DTO;
 using AppStock.Infrastructure.Services.Article;
 using AppStock.Infrastructure.Services.Commande;
+using AppStock.Infrastructure.Services.CommandeFournisseur;
 using AppStock.Infrastructure.Services.CommandeLigne;
 using AppStock.Infrastructure.Services.Contact;
 using AppStock.Infrastructure.Services.Stock;
@@ -28,6 +29,7 @@ namespace AppStock.Controllers
         private readonly IMapper _mapper;
         private readonly IArticleService _service_article;
         private readonly ICommandeService _service_commande;
+        private readonly ICommandeFournisseurService _service_commande_fournisseur;
         private readonly ICommandeLigneService _service_commande_ligne;
         private readonly IContactService _service_contact;
         private readonly IStockService _service_stock;
@@ -38,7 +40,8 @@ namespace AppStock.Controllers
                             , UserManager<IdentityUser> user_manager 
                             , IMapper mapper 
                             , IArticleService service_article 
-                            , ICommandeService service_commande 
+                            , ICommandeService service_commande
+                            , ICommandeFournisseurService service_commande_fournisseur 
                             , ICommandeLigneService service_commande_ligne
                             , IContactService service_contact 
                             , IStockService service_stock 
@@ -49,6 +52,7 @@ namespace AppStock.Controllers
             _mapper = mapper ;
             _service_article = service_article ;
             _service_commande = service_commande ;
+            _service_commande_fournisseur = service_commande_fournisseur ;
             _service_commande_ligne = service_commande_ligne;
             _service_contact = service_contact ;
             _service_stock = service_stock ;
@@ -203,6 +207,17 @@ namespace AppStock.Controllers
             var _commande = await _service_commande.GetOneById(_dto.Id);
             _commande.Adresse = _dto.Contact.Adresse;
             await _service_commande.Validate(_commande);
+
+            // verification pour CommandeFournisseur automatique
+            var liste_commande_fournisseur_auto = await _service_commande_fournisseur.getCommandesFournisseurAuto(_commande);
+            if(liste_commande_fournisseur_auto.Count > 0)
+            {
+                foreach (var item in liste_commande_fournisseur_auto)
+                {
+                    await _service_commande_fournisseur.Add(item);
+                }
+            }
+
             return RedirectToAction(nameof(Panier));
         }
 
