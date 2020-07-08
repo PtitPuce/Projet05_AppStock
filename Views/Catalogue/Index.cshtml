@@ -36,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.NomTypeTVA.Libelle)
             </td>
             <td>
-                <a class="nav-link text-dark" asp-area="" asp-controller="Commande" asp-action="AddArticleToPanier" asp-route-id="@item.Id" >Ajouter au Panier</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Commande" asp-action="AddArticleToPanier" asp-route-id="@item.Id" ><button type="button" class="btn btn-sm btn-success">Ajouter au Panier</button></a>
             </td>
         </tr>
 }

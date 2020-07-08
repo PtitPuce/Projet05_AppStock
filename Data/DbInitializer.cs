@@ -187,7 +187,7 @@ namespace AppStock.Data
                 context.SaveChanges();
             }
 
-            // STOCK
+            // STOCK :: initialise AU MOINS a 0, si par exemple l'Article provient du Seeding
             List<StockEntity> stocks = new List<StockEntity>();
             foreach(var article in context.ArticleEntities)
             {
