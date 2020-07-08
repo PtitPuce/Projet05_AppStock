@@ -7,16 +7,33 @@
 
 
 <h1>Traitement des commandes fournisseur</h1>
-<h3>Code :: @ViewData["filtre"]</h3>
-
-
 
 <p>
-    <a asp-action="Dashboard" asp-route-filtre="C">En cours de création</a>
-    <a asp-action="Dashboard" asp-route-filtre="T">Transmise au fournisseur</a>
-    <a asp-action="Dashboard" asp-route-filtre="R">Réceptionnée</a>
-    <a asp-action="Dashboard" asp-route-filtre="A">Annulée</a>
+    <a asp-action="Dashboard" asp-route-filtre="C"><button type="button" class="btn btn-sm btn-info">En cours de création</button></a>
+    <a asp-action="Dashboard" asp-route-filtre="T"><button type="button" class="btn btn-sm btn-info">Transmise au fournisseur</button></a>
+    <a asp-action="Dashboard" asp-route-filtre="R"><button type="button" class="btn btn-sm btn-info">Réceptionnée</button></a>
+    <a asp-action="Dashboard" asp-route-filtre="A"><button type="button" class="btn btn-sm btn-info">Annulée</button></a>
 </p>
+
+<h3>
+@if(@ViewData["filtre"].Equals("C"))
+{
+    <span>En cours de création</span>
+}
+else if(@ViewData["filtre"].Equals("T"))
+{
+    <span>Transmise au fournisseur</span>
+}
+else if(@ViewData["filtre"].Equals("R"))
+{
+    <span>Réceptionnée</span>
+}
+else if(@ViewData["filtre"].Equals("A"))
+{
+    <span>Annulée</span>
+}
+</h3>
+
 <table class="table">
     <thead>
         <tr>
@@ -70,8 +87,8 @@
                 }
                 else if(@ViewData["filtre"].Equals("T"))
                 {
-                    <a asp-action="StatutConfirmReception" asp-route-id="@item.Id">Confirmer livraison</a>
-                    <a asp-action="StatutAnnulation" asp-route-id="@item.Id">Annuler commande</a>
+                    <a asp-action="StatutConfirmReception" asp-route-id="@item.Id"><button type="button" class="btn btn-sm btn-success">Confirmer livraison</button></a>
+                    <a asp-action="StatutAnnulation" asp-route-id="@item.Id"><button type="button" class="btn btn-sm btn-danger">Annuler commande</button></a>
                 }
                 else if(@ViewData["filtre"].Equals("R"))
                 {
