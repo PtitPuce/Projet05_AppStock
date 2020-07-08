@@ -24,6 +24,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeLigne
                                     .Include(o => o.Article)
                                     .Include(o => o.Article.ArticleFamille)
                                     .Include(o => o.Article.NomTypeTVA)
+                                    .Include(o => o.Article.Fournisseur)
                                     .Include(o => o.Commande)
                                     .ToListAsync();
         }
@@ -34,6 +35,7 @@ namespace AppStock.Infrastructure.Repositories.CommandeLigne
                                     .Include(o => o.Article)
                                     .Include(o => o.Article.ArticleFamille)
                                     .Include(o => o.Article.NomTypeTVA)
+                                    .Include(o => o.Article.Fournisseur)
                                     .Include(o => o.Commande)
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }

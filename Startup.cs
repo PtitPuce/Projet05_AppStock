@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
 using AppStock.Infrastructure.Services.Article;
+using AppStock.Infrastructure.Services.Fournisseur;
 using AppStock.Infrastructure.Services.ArticleFamille;
 using AppStock.Infrastructure.Services.NomTypeTVA;
 using AppStock.Infrastructure.Services.Stock;
@@ -32,6 +33,7 @@ using AppStock.Infrastructure.Services.CommandeFournisseurLigne;
 using AppStock.Infrastructure.Services.StockProjection;
 
 using AppStock.Infrastructure.Repositories.Article;
+using AppStock.Infrastructure.Repositories.Fournisseur;
 using AppStock.Infrastructure.Repositories.ArticleFamille;
 using AppStock.Infrastructure.Repositories.NomTypeTVA;
 using AppStock.Infrastructure.Repositories.Stock;
@@ -96,6 +98,7 @@ namespace AppStock
 
             // S E R V I C E S //
             services.AddTransient<IArticleService, ArticleService>();
+            services.AddTransient<IFournisseurService, FournisseurService>();
             services.AddTransient<IArticleFamilleService, ArticleFamilleService>();
             services.AddTransient<INomTypeTVAService, NomTypeTVAService>();
             services.AddTransient<IStockService, StockService>();
@@ -110,6 +113,7 @@ namespace AppStock
 
             // R E P O S I T O R I E S //
             services.AddTransient<IArticleRepository, ArticleRepository>();
+            services.AddTransient<IFournisseurRepository, FournisseurRepository>();
             services.AddTransient<IArticleFamilleRepository, ArticleFamilleRepository>();
             services.AddTransient<INomTypeTVARepository, NomTypeTVARepository>();
             services.AddTransient<IStockRepository, StockRepository>();
