@@ -17,7 +17,7 @@ namespace AppStock.Models
         [Required]
         public string Libelle { get; set; }
         [Column("tva_taux")]
-        [DisplayFormat(DataFormatString = "{0:#.##}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:#.##}", ApplyFormatInEditMode = true)]
         public decimal Taux { get; set; }
 
         // soft delete

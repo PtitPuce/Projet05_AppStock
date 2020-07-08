@@ -54,6 +54,7 @@ namespace AppStock.Controllers
         // POST: Stock/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ArticleID,Quantite")] StockEntity item)
@@ -66,6 +67,7 @@ namespace AppStock.Controllers
             ViewData["ArticleID"] = new SelectList(_context.ArticleEntities, "Id", "Libelle", item.ArticleID);
             return View(item);
         }
+        */
 
         // GET: Stock/Edit/5
         public async Task<IActionResult> Edit(int id)
