@@ -7,16 +7,34 @@
 
 
 <h1>Traitement des commandes</h1>
-<h3>Code :: @ViewData["filtre"]</h3>
-
 
 
 <p>
-    <a asp-action="Dashboard" asp-route-filtre="A">En attente de preparation</a>
-    <a asp-action="Dashboard" asp-route-filtre="L">En cours de livraison</a>
-    <a asp-action="Dashboard" asp-route-filtre="V">Terminées</a>
-    <a asp-action="Dashboard" asp-route-filtre="X">Annulation</a>
+    <a asp-action="Dashboard" asp-route-filtre="A"><button type="button" class="btn btn-sm btn-info">En attente de preparation</button></a>
+    <a asp-action="Dashboard" asp-route-filtre="L"><button type="button" class="btn btn-sm btn-info">En cours de livraison</button></a>
+    <a asp-action="Dashboard" asp-route-filtre="V"><button type="button" class="btn btn-sm btn-info">Terminées</button></a>
+    <a asp-action="Dashboard" asp-route-filtre="X"><button type="button" class="btn btn-sm btn-info">Annulations</button></a>
 </p>
+
+<h3>
+@if(@ViewData["filtre"].Equals("A"))
+{
+    <span>En attente de préparation</span>
+}
+else if(@ViewData["filtre"].Equals("L"))
+{
+    <span>En cours de livraison</span>
+}
+else if(@ViewData["filtre"].Equals("V"))
+{
+    <span>Terminées</span>
+}
+else if(@ViewData["filtre"].Equals("X"))
+{
+    <span>Annulations</span>
+}
+</h3>
+
 <table class="table">
     <thead>
         <tr>
@@ -74,14 +92,14 @@
                 {
                     @if(@ServiceStock.IsReadyForShipment(item).Result)
                     {
-                       <a asp-action="StatutStartLivraison" asp-route-id="@item.Id">Départ livraison</a> 
+                       <a asp-action="StatutStartLivraison" asp-route-id="@item.Id"><button type="button" class="btn btn-sm btn-success">Départ livraison</button></a> 
                     }
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"><button type="button" class="btn btn-sm btn-danger">Supprimer</button></a>
                 }
                 else if(@ViewData["filtre"].Equals("L"))
                 {
-                    <a asp-action="StatutConfirmLivraison" asp-route-id="@item.Id">Confirmer livraison</a>
-                    <a asp-action="StatutAnnulation" asp-route-id="@item.Id">Annuler livraison</a>
+                    <a asp-action="StatutConfirmLivraison" asp-route-id="@item.Id"><button type="button" class="btn btn-sm btn-success">Confirmer livraison</button></a>
+                    <a asp-action="StatutAnnulation" asp-route-id="@item.Id"><button type="button" class="btn btn-sm btn-danger">Annuler livraison</button></a>
                 }
                 else if(@ViewData["filtre"].Equals("V"))
                 {
