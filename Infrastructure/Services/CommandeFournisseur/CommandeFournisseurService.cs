@@ -192,6 +192,7 @@ namespace AppStock.Infrastructure.Services.CommandeFournisseur
                 foreach (var fournisseur in liste_fournisseurs)
                 {
                     var commande_auto = new CommandeFournisseurEntity();
+                    commande_auto.isAuto = true;
                     commande_auto.CommandeFournisseurLignes = new List<CommandeFournisseurLigneEntity>();
                     commande_auto.FournisseurId = fournisseur.Id; // on lui associe le bon fournisseur, notamment pour l'adresse ; et en general car l'information semble pertinente
 

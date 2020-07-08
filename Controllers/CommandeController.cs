@@ -214,6 +214,7 @@ namespace AppStock.Controllers
             {
                 foreach (var item in liste_commande_fournisseur_auto)
                 {
+                    item.NomCommandeFournisseurStatut = await _context.NomCommandeFournisseurStatutEntities.Where(o => o.Code=="T").FirstOrDefaultAsync();
                     await _service_commande_fournisseur.Add(item);
                 }
             }
