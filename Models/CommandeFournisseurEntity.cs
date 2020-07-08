@@ -16,13 +16,13 @@ namespace AppStock.Models
         public string Numero { get; set; } = "Defaut";
         [Column("commande_fournisseur_commentaire")]
         public string Commentaire { get; set; } = "Pas de commentaire";
-        [Column("commande_fournisseur_contact_uid")]
-        public int ContactId { get; set; }
         [Column("commande_fournisseur_fournisseur_uid")]
         [DisplayName("Fournisseur")]
         public int FournisseurId { get; set; }
         [Column("commande_fournisseur_statut_uid")]
         public int NomCommandeFournisseurStatutId { get; set; }
+        [Column("commande_fournisseur_is_auto")]
+        public bool isAuto { get; set; } = false;
         
         // soft delete
         [Column("is_deleted")]
@@ -34,7 +34,6 @@ namespace AppStock.Models
         [Column("updated_at")]
         public DateTime UpdatedAt {get; set;}
 
-        public ContactEntity Contact { get;set; }
         public FournisseurEntity Fournisseur { get; set; }
         public NomCommandeFournisseurStatutEntity NomCommandeFournisseurStatut { get;set; }
         public ICollection<CommandeFournisseurLigneEntity> CommandeFournisseurLignes { get; set; }

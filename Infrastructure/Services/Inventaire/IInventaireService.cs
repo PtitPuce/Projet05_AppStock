@@ -10,6 +10,7 @@ namespace AppStock.Infrastructure.Services.Inventaire
         Task<IEnumerable<InventaireEntity>> GetAll();
         Task<InventaireEntity> GetOneByIdWithLignes(int id);
         Task<InventaireEntity> GetOneById(int id);
+        Task<InventaireEntity> GetOneByIdByArticleFamilleId(int id);
         Task<InventaireEntity> Add(InventaireEntity item);
         Task<InventaireEntity> Update(InventaireEntity item);
         Task<InventaireEntity> Validate(InventaireEntity item);

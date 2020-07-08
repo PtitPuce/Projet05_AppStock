@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
+@inject AppStock.Infrastructure.Services.Inventaire.IInventaireService ServiceInventaire
 
 <h1>Liste des inventaires</h1>
 
@@ -43,14 +44,14 @@
                 @Html.DisplayFor(modelItem => item.ArticleFamille.Libelle)
             </td>
             <td>
-                @if (item.NomInventaireStatutId == 1)
+                @if(@ServiceInventaire.isEditable(item))
                 {
                     <a asp-action="Edit" asp-route-id="@item.Id">Modifier</a><text> | </text> 
                 }
                 
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 
-                @if (item.NomInventaireStatutId == 1)
+                @if(@ServiceInventaire.isEditable(item))
                 {
                     <text> | </text> <a asp-action="Delete" asp-route-id="@item.Id">Supprimer</a>
                 }

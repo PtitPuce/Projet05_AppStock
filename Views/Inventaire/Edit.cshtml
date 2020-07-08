@@ -6,6 +6,8 @@
 
 <h1>Saisie de l'inventaire pour la famille d'article : @Model.ArticleFamille.Libelle</h1>
 
+
+
 <div>
     @if(Model.ArticleFamille.Articles.Count == 0)
     {
@@ -13,29 +15,52 @@
     }
     else
     {
-        @foreach (InventaireLigneEntity ligne in Model.InventaireLignes)
-        {
-            <table>
-                <td>@ligne.Article.Libelle | </td>
-                <td>Quantité en stock (théorique) : @ligne.QuantiteTheorique | </td>
-                <td>
-                    
-                    <form asp-action="UpdateLigneQuantiteComptee" method="POST">
+       <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Article
+                    </th>
+                    <th>
+                        Quantité en stock (théorique)
+                    </th>
+                    <th>
                         Quantité comptée (réelle)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (InventaireLigneEntity ligne in Model.InventaireLignes){
+                <tr>
+                    <td>
+                        @ligne.Article.Libelle
+                    </td>
+
+                    <td>
+                        @ligne.Article.Stock.Quantite
+                    </td>
+                    
+                    
+                    <td>
+                        <form asp-action="UpdateLigneQuantiteComptee" method="POST">
                         <input type="hidden" asp-for="@ligne.Id" name="ligne_Id">
                         <div class="form-group">
                             <input asp-for="@ligne.QuantiteComptee" name="ligne_Quantite_Comptee" class="form-control" />
-                            <span asp-validation-for="@ligne.QuantiteComptee" class="text-danger"></span>
+                            <span asp-validation-for="@ligne.QuantiteComptee" class="text-danger"></span>   
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Enregistrer" class="btn btn-primary" />
                         </div>
-                    </form>
-                </td>
-            </table>
-        }
+                        </form>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
     }
 </div>
+
 
 <div>
     <a asp-action="ValiderInventaire" asp-route-id="@Model.Id">Valider l'inventaire</a>

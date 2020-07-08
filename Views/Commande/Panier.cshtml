@@ -5,33 +5,26 @@
 @inject AppStock.Infrastructure.Services.CommandeLigne.ICommandeLigneService ServiceLigne
 @inject AppStock.Infrastructure.Services.Stock.IStockService ServiceStock
 
-<h1>Index</h1>
+<h1>Panier</h1>
 
 
 <table class="table">
     <tbody>
         <tr>
             <td>
-                @Model.Numero
+                Contact de la commande : @Model.Contact.Nom
             </td>
             <td>
-                @Model.Commentaire
-            </td>
-            <td>
-                contact = @Model.ContactId
-            </td>
-            <td>
-                contact = @Model.Contact.Nom
-            </td>
-            <td>
-                statut = @Model.NomCommandeStatutId
-            </td>
-            <td>
-                statut = @Model.NomCommandeStatut.Libelle
+                @if(@ServiceStock.IsSupposedlyUnavailableForCommande(Model).Result)
+                {
+                    <text>Retard prévu sur le délai livraison</text>
+                }
             </td>
         </tr>
     </tbody>
 </table>
+
+<hr>
 
 <div>
     @if(Model.CommandeLignes.Count == 0)
@@ -40,37 +33,64 @@
     }
     else
     {
-        @foreach (CommandeLigneEntity ligne in Model.CommandeLignes)
-        {
-            <table>
-                <td>@ligne.Article.Libelle</td>
-                <td>Disponibilite : @ServiceStock.IsSupposedlyAvailable(ligne.ArticleId, ligne.Quantite).Result </td>
-                
-                <td>
-                    
-                    <form asp-action="UpdateLigneQuantite" method="POST">
-                        <input type="hidden" asp-for="@ligne.Id" name="ligne_Id">
-                        <div class="form-group">
-                            <input asp-for="@ligne.Quantite" name="ligne_Quantite" class="form-control" />
-                            <span asp-validation-for="@ligne.Quantite" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary" />
-                        </div>
-                        <div class="form-group">
-                            <a asp-action="DeleteLigne" asp-route-id="@ligne.Id">Delete</a>
-                        </div>
-                    </form>
-                </td>
-            </table>
-            <p>@ServiceLigne.getPriceTotals(ligne)</p>
-
-            
-        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Article
+                    </th>
+                    <th>
+                        Disponibilité
+                    </th>
+                    <th>
+                        Quantité
+                    </th>
+                    <th>
+                        Prix
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CommandeLigneEntity ligne in Model.CommandeLignes)
+                {
+                    <tr>
+                        <td>
+                            @ligne.Article.Libelle
+                        </td>
+                        
+                        
+                        <td>
+                            @ServiceStock.IsSupposedlyAvailable(ligne.ArticleId, ligne.Quantite).Result
+                        </td>
+                        <td>
+                            <form asp-action="UpdateLigneQuantite" method="POST">
+                                <input type="hidden" asp-for="@ligne.Id" name="ligne_Id">
+                                <div class="form-group">
+                                    <input asp-for="@ligne.Quantite" name="ligne_Quantite" class="form-control" />
+                                    <span asp-validation-for="@ligne.Quantite" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                </div>
+                            </form>      
+                        </td>
+                        
+                        <td>
+                            @ServiceLigne.getPriceTotals(ligne)
+                        </td>
+                        
+                        <td>
+                            <a asp-action="DeleteLigne" asp-route-id="@ligne.Id">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
-    
 </div>
 
 <div>
     <a asp-action="AdresseLivraison" asp-route-id="@Model.Id">Valider la commande</a>
+    <a asp-action="Index" asp-controller="Catalogue">Retour au catalogue</a>
 </div>

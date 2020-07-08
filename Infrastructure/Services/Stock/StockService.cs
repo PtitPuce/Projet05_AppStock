@@ -8,8 +8,7 @@ using AppStock.Infrastructure.Exceptions;
 using AppStock.Infrastructure.Repositories.Stock;
 
 using AppStock.Infrastructure.Services.StockProjection;
-
-
+using AppStock.Models.DTO;
 
 namespace AppStock.Infrastructure.Services.Stock
 {
@@ -103,6 +102,31 @@ namespace AppStock.Infrastructure.Services.Stock
                 value = true;
             }
             return value;
+        }
+
+        public async Task<bool> IsSupposedlyUnavailableForCommande(CommandeDTO commande)
+        {
+            foreach (CommandeLigneEntity ligne in commande.CommandeLignes)
+            {
+                int proj = await _service_stock_projection.Value.Projection(ligne.ArticleId);
+                if(ligne.Quantite > proj)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> IsReadyForShipment(CommandeEntity commande)
+        {
+            foreach (CommandeLigneEntity ligne in commande.CommandeLignes)
+            {
+                if(ligne.Quantite > ligne.Article.Stock.Quantite)
+                {
+                    return await Task.FromResult(false);
+                }
+            }
+            return await Task.FromResult(true);
         }
 
     }

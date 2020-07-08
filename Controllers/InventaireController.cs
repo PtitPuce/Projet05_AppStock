@@ -23,7 +23,7 @@ namespace AppStock.Controllers
         private readonly IInventaireLigneService _service_inventaire_ligne;
         private readonly IStockService _service_stock;
         private readonly IArticleFamilleService _service_article_famille;
-        public SelectList ArticleFamillesWithStockSL { get; set; } // Liste des familles d'articles qui dont tous les articles ont du stock
+        public SelectList ArticleFamillesSL { get; set; } // Liste des familles d'articles qui dont tous les articles ont du stock
         public InventaireController( ApplicationDbContext context
                             , UserManager<IdentityUser> user_manager 
                             , IInventaireService service_inventaire 
@@ -79,9 +79,8 @@ namespace AppStock.Controllers
         // GET: Inventaire/Create
         public IActionResult Create()
         {
-            PopulateArticleFamillesWithStockDropDownList();
-            //ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Libelle");
-            ViewData["ArticleFamilleId"] = ArticleFamillesWithStockSL;
+            PopulateArticleFamillesDropDownList();
+            ViewData["ArticleFamilleId"] = ArticleFamillesSL;
             return View();
         }
 
@@ -92,6 +91,14 @@ namespace AppStock.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, ArticleFamilleId")] InventaireEntity item)
         {
+            // Vérification si l'inventaire de la famille existe déjà
+            var inventaire = await _service_inventaire.GetOneByIdByArticleFamilleId(item.ArticleFamilleId);
+            // S'il existe, on redirige vers l'edit de l'inventaire
+            if (inventaire != null)
+            {
+                return RedirectToAction("Edit", new { Id = inventaire.Id });
+            }
+            
             // recuperer l'utilisateur courant
             var _user = await _user_manager.GetUserAsync(HttpContext.User);
             item.UserId = _user.Id;
@@ -99,7 +106,7 @@ namespace AppStock.Controllers
             if (ModelState.IsValid)
             {
                 await _service_inventaire.Add(item);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Edit", new { Id = item.Id });
             }
             ViewData["ArticleFamilleId"] = new SelectList(_context.ArticleFamilleEntities, "Id", "Code", item.ArticleFamilleId);
             return View(item);
@@ -113,10 +120,6 @@ namespace AppStock.Controllers
             {
                 return NotFound();
             }
-            if (!_service_inventaire.isEditable(inventaireEntity))
-            {
-                throw new NotImplementedException();
-            }
             return View(inventaireEntity);
         }
 
@@ -127,10 +130,6 @@ namespace AppStock.Controllers
             if (item == null)
             {
                 return NotFound();
-            }
-            if (!_service_inventaire.isEditable(item))
-            {
-                throw new NotImplementedException();
             }
 
             return View(item);
@@ -150,16 +149,14 @@ namespace AppStock.Controllers
             return _context.InventaireEntities.Any(e => e.Id == id);
         }
 
-        // Renvoie la liste des familles qui ont des articles en stock
-        public void PopulateArticleFamillesWithStockDropDownList(object selectedArticleFamille = null)
+        // Renvoie la liste des familles
+        public void PopulateArticleFamillesDropDownList(object selectedArticleFamille = null)
         {
             var articleFamilleQuery = _context.ArticleFamilleEntities
                                 .Include(o => o.Articles)
-                                    .ThenInclude(o => o.Stock)
-                                .Where(o=> o.Articles.Any(i => i.Stock != null))
                                 .OrderBy(z=> z.Libelle);
 
-            ArticleFamillesWithStockSL = new SelectList(articleFamilleQuery.AsNoTracking(),
+            ArticleFamillesSL = new SelectList(articleFamilleQuery.AsNoTracking(),
                         "Id", "Libelle", selectedArticleFamille);
         }
     }

@@ -22,7 +22,6 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         {
             return await _context.CommandeFournisseurEntities
                                     .Include(o => o.Fournisseur)
-                                    .Include(o => o.Contact)
                                         .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeFournisseurStatut)
                                     .Include(o => o.CommandeFournisseurLignes)
@@ -35,7 +34,6 @@ namespace AppStock.Infrastructure.Repositories.CommandeFournisseur
         {
             return await _context.CommandeFournisseurEntities
                                     .Include(o => o.Fournisseur)
-                                    .Include(o => o.Contact)
                                         .ThenInclude(o => o.Adresse)
                                     .Include(o => o.NomCommandeFournisseurStatut)
                                     .Include(o => o.CommandeFournisseurLignes)

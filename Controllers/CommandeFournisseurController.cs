@@ -23,7 +23,6 @@ namespace AppStock.Controllers
         private readonly IArticleService _service_article;
         private readonly ICommandeFournisseurService _service_commande_fournisseur;
         private readonly ICommandeFournisseurLigneService _service_commande_fournisseur_ligne;
-        private readonly IContactService _service_contact;
         private readonly IStockService _service_stock;
 
         public CommandeFournisseurController(
@@ -32,7 +31,6 @@ namespace AppStock.Controllers
                             , IArticleService service_article 
                             , ICommandeFournisseurService service_commande_fournisseur 
                             , ICommandeFournisseurLigneService service_commande_fournisseur_ligne
-                            , IContactService service_contact 
                             , IStockService service_stock)
         {
             _context = context;
@@ -40,7 +38,6 @@ namespace AppStock.Controllers
             _service_article = service_article ;
             _service_commande_fournisseur = service_commande_fournisseur ;
             _service_commande_fournisseur_ligne = service_commande_fournisseur_ligne;
-            _service_contact = service_contact ;
             _service_stock = service_stock ;
         }
         // GET: Commande MONITOR
@@ -48,8 +45,7 @@ namespace AppStock.Controllers
         {
             var applicationDbContext = _context.CommandeFournisseurEntities
                                     .Include(o => o.Fournisseur)
-                                    .Include(o => o.Contact)
-                                        .ThenInclude(o => o.Adresse)
+                                        .ThenInclude( o => o.Adresse)
                                     .Include(o => o.NomCommandeFournisseurStatut)
                                     .Include(o => o.CommandeFournisseurLignes)
                                         .ThenInclude(o => o.Article)
@@ -106,7 +102,6 @@ namespace AppStock.Controllers
             }
 
             var commandeFournisseurEntity = await _context.CommandeFournisseurEntities
-                .Include(c => c.Contact)
                 .Include(c => c.Fournisseur)
                 .Include(c => c.NomCommandeFournisseurStatut)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -133,15 +128,10 @@ namespace AppStock.Controllers
         public async Task<IActionResult> Create([Bind("Id,Numero,Commentaire,FournisseurId")] CommandeFournisseurEntity commandeFournisseurEntity)
         {
             if (ModelState.IsValid)
-            {   // recuperer l'utilisateur courant
-                var _user = await _user_manager.GetUserAsync(HttpContext.User);
-                var _contact = await _service_contact.GetOneByUserId(_user.Id);
-                commandeFournisseurEntity.Contact = _contact;
-
+            { 
                 await _service_commande_fournisseur.Add(commandeFournisseurEntity);
                 return RedirectToAction("Edit", new { Id = commandeFournisseurEntity.Id });
             }
-            ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
             ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Code", commandeFournisseurEntity.NomCommandeFournisseurStatutId);
             return View(commandeFournisseurEntity);
@@ -169,7 +159,7 @@ namespace AppStock.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Numero,Commentaire,ContactId,FournisseurId,NomCommandeFournisseurStatutId")] CommandeFournisseurEntity commandeFournisseurEntity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Numero,Commentaire,FournisseurId,NomCommandeFournisseurStatutId")] CommandeFournisseurEntity commandeFournisseurEntity)
         {
             if (ModelState.IsValid)
             {
@@ -192,7 +182,6 @@ namespace AppStock.Controllers
                 ViewData["ArticleId"] = new SelectList(await _service_article.getAllByFournisseurId(commandeFournisseurEntity.FournisseurId), "Id", "Libelle");
                 return View(commandeFournisseurEntity);
             }
-            ViewData["ContactId"] = new SelectList(_context.ContactEntities, "Id", "Id", commandeFournisseurEntity.ContactId);
             ViewData["FournisseurId"] = new SelectList(_context.FournisseurEntities, "Id", "Id", commandeFournisseurEntity.FournisseurId);
             ViewData["NomCommandeFournisseurStatutId"] = new SelectList(_context.NomCommandeFournisseurStatutEntities, "Id", "Code", commandeFournisseurEntity.NomCommandeFournisseurStatutId);
             return View(commandeFournisseurEntity);
@@ -260,7 +249,6 @@ namespace AppStock.Controllers
             }
 
             var commandeFournisseurEntity = await _context.CommandeFournisseurEntities
-                .Include(c => c.Contact)
                 .Include(c => c.Fournisseur)
                 .Include(c => c.NomCommandeFournisseurStatut)
                 .FirstOrDefaultAsync(m => m.Id == id);

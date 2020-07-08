@@ -72,7 +72,10 @@
                 @* Controles differents selon le statut des commandes affichees *@
                 @if(@ViewData["filtre"].Equals("A"))
                 {
-                    <a asp-action="StatutStartLivraison" asp-route-id="@item.Id">Départ livraison</a>
+                    @if(@ServiceStock.IsReadyForShipment(item).Result)
+                    {
+                       <a asp-action="StatutStartLivraison" asp-route-id="@item.Id">Départ livraison</a> 
+                    }
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 }
                 else if(@ViewData["filtre"].Equals("L"))

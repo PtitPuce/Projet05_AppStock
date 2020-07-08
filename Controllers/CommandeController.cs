@@ -66,8 +66,12 @@ namespace AppStock.Controllers
         public async Task<IActionResult> Dashboard(string filtre="A")
         {
             var applicationDbContext = _context.CommandeEntities
-                                            .Include(c => c.Contact)
-                                            .Include(c => c.NomCommandeStatut)
+                                            .Include(o => o.Contact)
+                                                .ThenInclude(o => o.Adresse)
+                                            .Include(o => o.NomCommandeStatut)
+                                            .Include(o => o.CommandeLignes)
+                                                .ThenInclude(o => o.Article)
+                                                    .ThenInclude(o => o.Stock)
                                             .Where(o => o.NomCommandeStatut.Code == filtre );
 
             ViewData["filtre"] = filtre;

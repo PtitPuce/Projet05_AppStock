@@ -42,6 +42,19 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
                                     .FirstOrDefaultAsync(m => m.Id == id);
         }
 
+        public async Task<InventaireEntity> GetOneByIdByArticleFamilleIdAsync(int id)
+        {
+            return await _context.InventaireEntities
+                                    .Include(o => o.NomInventaireStatut)
+                                    .Include(o => o.User)
+                                    .Include(o => o.ArticleFamille)
+                                        .ThenInclude (o => o.Articles)
+                                            .ThenInclude(o => o.Stock)
+                                    .Include(o => o.InventaireLignes)
+                                    .Where(o => o.NomInventaireStatut.Code == "E")
+                                    .FirstOrDefaultAsync(m => m.ArticleFamilleId == id);
+        }
+
         public async Task<InventaireEntity> GetOneByIdArticleFamilleAsync(int id)
         {
             return await _context.InventaireEntities
@@ -58,7 +71,7 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
         
         public async Task<InventaireEntity> AddAsync(InventaireEntity item)
         {
-            item.NomInventaireStatutId = 1; // hardCode "En cours"
+            item.NomInventaireStatutId = _context.NomInventaireStatutEntities.Where(o => o.Code=="E").FirstOrDefault().Id; // E = en cours
             _context.InventaireEntities.Add(item);
             await _context.SaveChangesAsync();
             return item;
@@ -81,7 +94,7 @@ namespace AppStock.Infrastructure.Repositories.Inventaire
 
         public async Task<InventaireEntity> ValidateAsync(InventaireEntity item)
         {
-            item.NomInventaireStatutId = 2; // hardCode "TERMINE"
+            item.NomInventaireStatutId = _context.NomInventaireStatutEntities.Where(o => o.Code=="T").FirstOrDefault().Id; // T = terminé
             item.DateCloture = DateTime.UtcNow;
             _context.Update(item);
             await _context.SaveChangesAsync();

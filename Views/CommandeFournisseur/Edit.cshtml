@@ -15,7 +15,6 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ContactId" />
             <input type="hidden" asp-for="FournisseurId" >
             <input type="hidden" asp-for="NomCommandeFournisseurStatutId" />
             
@@ -104,8 +103,7 @@
                     <td>
                         @ligne.Article.Libelle
                     </td>
-                    
-                    
+
                     <td>
                         <form asp-action="UpdateLigneQuantite" method="POST">
                         <input type="hidden" asp-for="Id" name="CommandeFournisseurId">
@@ -114,13 +112,12 @@
                             <input asp-for="@ligne.Quantite" name="LigneQuantite" class="form-control" />
                             <span asp-validation-for="@ligne.Quantite" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                        </div>
                         </form>
                     </td>
                     
-                    
-                    <td>
-                        <input type="submit" value="Enregistrer" class="btn btn-primary" />
-                    </td>
                     <td>
                         <a asp-action="DeleteLigne" asp-route-id="@ligne.Id">Supprimer</a>
                     </td>
@@ -129,40 +126,6 @@
             </tbody>
         </table>
     }
-
-
-
-
-
-
-
-        @*
-        <p>Liste des articles de la commande</p>
-        @foreach (CommandeFournisseurLigneEntity ligne in Model.CommandeFournisseurLignes)
-        {
-            <table>
-                <td>@ligne.Article.Libelle</td>
-                <td>
-                    
-                    <form asp-action="UpdateLigneQuantite" method="POST">
-                        <input type="hidden" asp-for="Id" name="CommandeFournisseurId">
-                        <input type="hidden" asp-for="@ligne.Id" name="LigneId">
-                        <div class="form-group">
-                            <input asp-for="@ligne.Quantite" name="LigneQuantite" class="form-control" />
-                            <span asp-validation-for="@ligne.Quantite" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-primary" />
-                        </div>
-                        <div class="form-group">
-                            <a asp-action="DeleteLigne" asp-route-id="@ligne.Id">Delete</a>
-                        </div>
-                    </form>
-                </td>
-            </table>
-        }
-    }
-    *@
 </div>
 
 <hr>
